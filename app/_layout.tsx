@@ -61,6 +61,7 @@ export default function RootLayout() {
     <AuthProvider>
       <ThemeProvider value={pipTheme}>
         <Stack>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         </Stack>

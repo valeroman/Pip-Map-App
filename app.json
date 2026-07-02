@@ -2,6 +2,7 @@
   "expo": {
     "name": "pip-map-app",
     "slug": "pip-map-app",
+    "owner": "valeroman",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -40,6 +41,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4e30c7ee-0dbb-4ecb-a46c-0a9173b2459d"
+      }
     }
   }
 }

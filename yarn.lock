@@ -2137,6 +2137,38 @@ expo-constants@~57.0.2:
   dependencies:
     "@expo/env" "~2.4.0"
 
+expo-dev-client@~57.0.4:
+  version "57.0.4"
+  resolved "https://registry.yarnpkg.com/expo-dev-client/-/expo-dev-client-57.0.4.tgz#da2d89364bdf0259de3062c323c8dfa83c24efed"
+  integrity sha512-WZJvnajz/fKLzaCgVVpdQRQZ9ZCn/6RPs5HqLA9SVM27oQ4sMR00mGDIay/rHoJeIEMssIabivAGxIoE5MaRhw==
+  dependencies:
+    expo-dev-launcher "~57.0.4"
+    expo-dev-menu "~57.0.4"
+    expo-dev-menu-interface "~57.0.0"
+    expo-manifests "~57.0.0"
+    expo-updates-interface "~57.0.0"
+
+expo-dev-launcher@~57.0.4:
+  version "57.0.4"
+  resolved "https://registry.yarnpkg.com/expo-dev-launcher/-/expo-dev-launcher-57.0.4.tgz#4271614f07df1851376046d3b24f6d2d6c21f7e6"
+  integrity sha512-ScjK9W9yjaMDiKVk4N9FLho2n0tyA32AjZ2Yrv9OJz7+l/D15a1eMbEV/Fhbpvulm41SGBJ0W9d/l4UnkbGMVA==
+  dependencies:
+    "@expo/schema-utils" "^57.0.0"
+    expo-dev-menu "~57.0.4"
+    expo-manifests "~57.0.0"
+
+expo-dev-menu-interface@~57.0.0:
+  version "57.0.0"
+  resolved "https://registry.yarnpkg.com/expo-dev-menu-interface/-/expo-dev-menu-interface-57.0.0.tgz#23bd53c35d00cead3fd963a9bc3e2abf8c00467d"
+  integrity sha512-F47VdzOHYc19FhI/jBgctpO8a5UskTIxG6a1E5t3W5gF8VImuvBQffdXXfLHhsuCl7dS3v3U0R45cleeVXO1Zg==
+
+expo-dev-menu@~57.0.4:
+  version "57.0.4"
+  resolved "https://registry.yarnpkg.com/expo-dev-menu/-/expo-dev-menu-57.0.4.tgz#d7b554d6963eda48bc4fab62de499007d6292e19"
+  integrity sha512-WHnzMoQT+4c3VLqWbyvaaLEJNmbzErQLMNF8r9GZe9XuhG1dutXaJj+JMeFLb9GAZ1VtcBDqeA/KTdyn6F4a+Q==
+  dependencies:
+    expo-dev-menu-interface "~57.0.0"
+
 expo-file-system@~57.0.0:
   version "57.0.0"
   resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-57.0.0.tgz#d7afbb2ff0a269113a00a688c1f6ba89404df56c"
@@ -2153,6 +2185,11 @@ expo-glass-effect@^57.0.0:
   version "57.0.0"
   resolved "https://registry.yarnpkg.com/expo-glass-effect/-/expo-glass-effect-57.0.0.tgz#2842ae7d49305ebbc18bed27b5eca543ce1f24d2"
   integrity sha512-QadzKSKpjXOlkIEnkX7SqHwCgUJZLjhWUvg1AauaUgKVnz35Ror41juM4y+KNr9pFxnukSDUz8L+UvdZVCNu6Q==
+
+expo-json-utils@~57.0.0:
+  version "57.0.0"
+  resolved "https://registry.yarnpkg.com/expo-json-utils/-/expo-json-utils-57.0.0.tgz#2df93208694948bb3534fb77451803217d45f429"
+  integrity sha512-GJMjJlS3ZRTXWkKJPXY9OjscEEyPxbvNURBJ9Gkd3KxS4Hzof+EdK8pF+3Ty4ec435ciYm9ll+IWznuVHYMiow==
 
 expo-keep-awake@~57.0.0:
   version "57.0.0"
@@ -2171,6 +2208,13 @@ expo-linking@~57.0.1:
   dependencies:
     expo-constants "~57.0.2"
     invariant "^2.2.4"
+
+expo-manifests@~57.0.0:
+  version "57.0.0"
+  resolved "https://registry.yarnpkg.com/expo-manifests/-/expo-manifests-57.0.0.tgz#2ea2a10b2d5aaae1dd6eca2d292d5f14230740aa"
+  integrity sha512-JDKDuF1gd3wPywhu+VzH+qFNDlu91Unqpcre6R9b14MEMq5L3mG6XL9LOySChiWlLJAoObeNPdVV7Od6P++49g==
+  dependencies:
+    expo-json-utils "~57.0.0"
 
 expo-modules-autolinking@~57.0.3:
   version "57.0.3"
@@ -2257,6 +2301,11 @@ expo-symbols@^57.0.0, expo-symbols@~57.0.0:
   dependencies:
     "@expo-google-fonts/material-symbols" "^0.4.1"
     sf-symbols-typescript "^2.0.0"
+
+expo-updates-interface@~57.0.0:
+  version "57.0.0"
+  resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-57.0.0.tgz#01c4839dd0309150fc9b9ae72bc97ef4e2111952"
+  integrity sha512-AQASxPDpUjHG55R4WXZ5mLu0rE4F2T/JfHOsXLfZPS1A268ynHHFv+MnZ99/Gb0xWvg3ZjNTgXPEWoRCShSJJg==
 
 expo-web-browser@~57.0.0:
   version "57.0.0"
