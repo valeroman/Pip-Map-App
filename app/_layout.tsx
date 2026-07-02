@@ -8,6 +8,7 @@ import {
 } from '@expo-google-fonts/share-tech-mono';
 import { VT323_400Regular } from '@expo-google-fonts/vt323';
 
+import { AuthProvider } from '@/context/AuthContext';
 import { colors } from '@/theme';
 
 export {
@@ -57,11 +58,13 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={pipTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider value={pipTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        </Stack>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
