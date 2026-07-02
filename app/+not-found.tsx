@@ -1,40 +1,42 @@
 import { Link, Stack } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
-import { Text, View } from '@/components/Themed';
+import { PipScreen } from '@/components/PipScreen';
+import { PipText } from '@/components/PipText';
+import { colors } from '@/theme';
 
 export default function NotFoundScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
-      <View style={styles.container}>
-        <Text style={styles.title}>This screen doesn't exist.</Text>
+      <Stack.Screen options={{ title: 'Error 404' }} />
+      <PipScreen style={styles.container}>
+        <PipText variant="title" color={colors.danger} glow>
+          Señal perdida
+        </PipText>
+        <PipText variant="body" color={colors.textDim} style={styles.body}>
+          Esta terminal no existe.
+        </PipText>
 
         <Link href="/" style={styles.link}>
-          <Text style={styles.linkText}>Go to home screen!</Text>
+          <PipText variant="label" color={colors.primary}>
+            Volver al inicio
+          </PipText>
         </Link>
-      </View>
+      </PipScreen>
     </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  body: {
+    marginTop: 8,
   },
   link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    fontSize: 14,
-    color: '#2e78b7',
+    marginTop: 20,
+    paddingVertical: 12,
   },
 });
