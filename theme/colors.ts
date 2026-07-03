@@ -1,7 +1,7 @@
 export const palette = {
   crtBg: '#0A0F0A',
   pipGreen: '#21FF6C',
-  pipGreenDim: '#1F8A4C',
+  pipGreenDim: '#3DCC7D',
   amber: '#FFB642',
   vaultYellow: '#FFC72C',
   blue: '#16385E',
@@ -11,7 +11,7 @@ export const palette = {
 
 export const colors = {
   background: palette.crtBg,
-  surface: '#0F1710',
+  surface: '#152218',
   primary: palette.pipGreen,
   primaryDim: palette.pipGreenDim,
   textPrimary: palette.pipGreen,

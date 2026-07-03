@@ -1,5 +1,5 @@
 import { SymbolView } from 'expo-symbols';
-import { Link, Tabs } from 'expo-router';
+import { Link, Stack } from 'expo-router';
 import { Pressable } from 'react-native';
 
 import { colors, fonts } from '@/theme';
@@ -7,20 +7,8 @@ import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
 export default function TabLayout() {
   return (
-    <Tabs
+    <Stack
       screenOptions={{
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.primaryDim,
-        tabBarStyle: {
-          backgroundColor: colors.background,
-          borderTopColor: colors.border,
-        },
-        tabBarLabelStyle: {
-          fontFamily: fonts.mono,
-          fontSize: 10,
-          letterSpacing: 1,
-          textTransform: 'uppercase',
-        },
         headerStyle: { backgroundColor: colors.background },
         headerTitleStyle: { fontFamily: fonts.display, fontSize: 22, color: colors.primary },
         headerTintColor: colors.primary,
@@ -28,17 +16,10 @@ export default function TabLayout() {
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
       }}>
-      <Tabs.Screen
+      <Stack.Screen
         name="index"
         options={{
           title: 'MAPA',
-          tabBarIcon: ({ color }) => (
-            <SymbolView
-              name={{ ios: 'map', android: 'map', web: 'map' }}
-              tintColor={color}
-              size={24}
-            />
-          ),
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable style={{ marginRight: 15 }}>
@@ -55,19 +36,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'DATA',
-          tabBarIcon: ({ color }) => (
-            <SymbolView
-              name={{ ios: 'list.bullet.rectangle', android: 'list_alt', web: 'list_alt' }}
-              tintColor={color}
-              size={24}
-            />
-          ),
-        }}
-      />
-    </Tabs>
+    </Stack>
   );
 }
