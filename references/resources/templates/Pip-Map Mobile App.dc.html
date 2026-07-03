@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+  @keyframes scan{from{background-position-y:0}to{background-position-y:6px}}
+  @keyframes sweep{to{transform:rotate(360deg)}}
+  @keyframes ping{0%{transform:scale(.3);opacity:.9}80%,100%{transform:scale(2.8);opacity:0}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  @keyframes flick{0%,100%{opacity:1}96%{opacity:1}97%{opacity:.85}98%{opacity:1}}
+  @keyframes route{to{stroke-dashoffset:-60}}
+  @keyframes ld{0%,100%{opacity:.25}50%{opacity:1}}
+</style>
+</helmet>
+
+<!-- ============ FRAME 1 · MAPA / TRANSMITIENDO ============ -->
+<div style="position:absolute;left:0px;top:0px;width:400px;">
+  <div data-drags-parent="1" style="font-family:'Share Tech Mono',monospace;color:#5e6f5e;font-size:12px;letter-spacing:.22em;margin-bottom:12px;">01 · MAPA — TRANSMITIENDO</div>
+  <div style="position:relative;width:400px;background:#0b0e0b;border-radius:48px;padding:14px;box-shadow:0 0 0 2px #1a201a,0 24px 60px rgba(0,0,0,.55);">
+    <div style="position:absolute;top:24px;left:50%;transform:translateX(-50%);width:54px;height:5px;border-radius:3px;background:#1a201a;z-index:60;"></div>
+    <div data-screen-label="MAPA-TX" style="position:relative;width:372px;height:792px;border-radius:36px;overflow:hidden;background:#0A0F0A;color:#21FF6C;font-family:'VT323',monospace;display:flex;flex-direction:column;animation:flick 8s infinite;">
+      <!-- status + header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 8px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.14em;color:#21FF6C;">
+        <span>21:47</span>
+        <span style="color:#FFC72C;letter-spacing:.2em;">VAULT-TEC PIP-MAP</span>
+        <span style="display:inline-flex;align-items:center;gap:3px;"><span style="display:inline-flex;align-items:center;height:13px;border:1px solid #21FF6C;padding:1px;gap:1px;"><i style="width:5px;height:100%;background:#21FF6C;display:block;"></i><i style="width:5px;height:100%;background:#21FF6C;display:block;"></i><i style="width:5px;height:100%;background:#21FF6C;display:block;"></i><i style="width:5px;height:100%;background:transparent;display:block;"></i></span><i style="width:2px;height:6px;background:#21FF6C;display:block;"></i></span>
+      </div>
+      <!-- tabs -->
+      <div style="display:flex;margin:0 14px;border:1px solid #1F8A4C;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));background:#0a120a;">
+        <div style="flex:1;text-align:center;padding:9px 4px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.18em;color:#06140a;background:#21FF6C;box-shadow:0 0 14px rgba(33,255,108,.5);">◤ MAPA</div>
+        <div style="flex:1;text-align:center;padding:9px 4px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.18em;color:#1F8A4C;">GRUPO</div>
+        <div style="flex:1;text-align:center;padding:9px 4px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.18em;color:#1F8A4C;">ESTADO</div>
+      </div>
+      <!-- MAP -->
+      <div style="position:relative;flex:1;margin:12px 14px;border:1px solid #1F8A4C;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));overflow:hidden;background:radial-gradient(circle at 50% 46%,#0d180d,#0A0F0A 75%);">
+        <svg viewBox="0 0 344 470" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;">
+          <defs><linearGradient id="rt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#21FF6C" stop-opacity="0"/><stop offset="1" stop-color="#21FF6C" stop-opacity=".9"/></linearGradient></defs>
+          <g stroke="#1F8A4C" stroke-width="1" opacity=".35" fill="none">
+            <path d="M-10 110 H360"/><path d="M-10 230 H360"/><path d="M-10 350 H360"/>
+            <path d="M90 -10 V480"/><path d="M210 -10 V480"/><path d="M300 -10 V480"/>
+            <path d="M90 230 L210 110 L300 230"/><path d="M0 350 L90 230"/>
+          </g>
+          <circle cx="172" cy="235" r="58" fill="none" stroke="#1F8A4C" stroke-width="1" opacity=".5"/>
+          <circle cx="172" cy="235" r="100" fill="none" stroke="#1F8A4C" stroke-width="1" opacity=".35"/>
+          <circle cx="172" cy="235" r="150" fill="none" stroke="#1F8A4C" stroke-width="1" opacity=".22"/>
+          <path d="M172 235 L262 120" stroke="url(#rt)" stroke-width="2" stroke-dasharray="6 6" fill="none" style="animation:route 1.6s linear infinite;"/>
+          <path d="M172 235 L80 360" stroke="url(#rt)" stroke-width="2" stroke-dasharray="6 6" fill="none" opacity=".7" style="animation:route 2s linear infinite;"/>
+        </svg>
+        <!-- radar sweep around own pos -->
+        <div style="position:absolute;left:50%;top:50%;width:300px;height:300px;transform:translate(-50%,-50%);border-radius:50%;background:conic-gradient(from 0deg,rgba(33,255,108,.28),rgba(33,255,108,0) 75deg);animation:sweep 3.4s linear infinite;"></div>
+        <!-- own position -->
+        <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);"><span style="position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;background:#21FF6C;box-shadow:0 0 14px #21FF6C;"></span><span style="position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;border:1px solid #21FF6C;animation:ping 2s infinite;"></span><span style="position:absolute;left:14px;top:-7px;font-family:'Share Tech Mono';font-size:11px;color:#21FF6C;white-space:nowrap;">TÚ</span></div>
+        <!-- member blips -->
+        <div style="position:absolute;left:74%;top:26%;"><span style="position:absolute;width:9px;height:9px;border-radius:50%;background:#21FF6C;box-shadow:0 0 12px #21FF6C;animation:pulse 1.8s infinite;"></span><span style="position:absolute;width:9px;height:9px;border-radius:50%;border:1px solid #21FF6C;animation:ping 1.8s infinite;"></span><span style="position:absolute;left:13px;top:-4px;font-family:'Share Tech Mono';font-size:11px;color:#21FF6C;white-space:nowrap;">MIEMBRO-02</span></div>
+        <div style="position:absolute;left:22%;top:74%;"><span style="position:absolute;width:8px;height:8px;border-radius:50%;background:#FFB642;box-shadow:0 0 10px #FFB642;animation:pulse 2.4s infinite;"></span><span style="position:absolute;left:13px;top:-4px;font-family:'Share Tech Mono';font-size:11px;color:#FFB642;white-space:nowrap;">MIEMBRO-03 ⚠</span></div>
+        <!-- corner indicators -->
+        <div style="position:absolute;top:10px;left:10px;font-family:'Share Tech Mono';font-size:10px;letter-spacing:.12em;color:#21FF6C;border:1px solid #1F8A4C;background:rgba(10,15,10,.7);padding:4px 7px;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">SUJETOS RASTREADOS: 02</div>
+        <div style="position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:5px;font-family:'Share Tech Mono';font-size:10px;letter-spacing:.12em;color:#21FF6C;border:1px solid #1F8A4C;background:rgba(10,15,10,.7);padding:4px 7px;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));"><span style="width:6px;height:6px;border-radius:50%;background:#21FF6C;box-shadow:0 0 6px #21FF6C;animation:pulse 1.6s infinite;"></span>SEÑAL: ESTABLE</div>
+        <div style="position:absolute;bottom:10px;left:10px;font-family:'Share Tech Mono';font-size:10px;letter-spacing:.1em;color:#1F8A4C;">POSICIÓN ADQUIRIDA · 34.05N 118.24W</div>
+      </div>
+      <!-- SHARE SWITCH (transmitting) -->
+      <div style="margin:0 14px 18px;position:relative;border:2px solid #21FF6C;background:#0a120a;padding:16px 18px;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));box-shadow:inset 0 0 22px rgba(33,255,108,.14),0 0 18px rgba(33,255,108,.3);display:flex;align-items:center;gap:14px;">
+        <span style="width:14px;height:14px;border-radius:50%;background:#21FF6C;box-shadow:0 0 12px #21FF6C;animation:pulse 1.4s infinite;flex-shrink:0;"></span>
+        <div style="flex:1;"><div style="font-size:26px;line-height:1;color:#21FF6C;text-shadow:0 0 10px rgba(33,255,108,.5);">TRANSMITIENDO POSICIÓN</div><div style="font-family:'Share Tech Mono';font-size:11px;letter-spacing:.14em;color:#1F8A4C;margin-top:3px;">ENLACE ACTIVO · TOCAR PARA DETENER</div></div>
+        <div style="position:relative;width:54px;height:30px;border:1px solid #21FF6C;background:rgba(33,255,108,.14);clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));flex-shrink:0;"><span style="position:absolute;top:2px;right:2px;width:24px;height:24px;background:#21FF6C;box-shadow:0 0 10px rgba(33,255,108,.8);clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));"></span></div>
+      </div>
+      <!-- CRT overlays -->
+      <div style="position:absolute;inset:0;z-index:50;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.22) 3px,rgba(0,0,0,0) 4px);background-size:100% 6px;animation:scan .35s linear infinite;mix-blend-mode:multiply;"></div>
+      <div style="position:absolute;inset:0;z-index:51;pointer-events:none;border-radius:36px;box-shadow:inset 0 0 70px rgba(0,0,0,.65);background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.5) 100%);"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FRAME 2 · MAPA / INACTIVO ============ -->
+<div style="position:absolute;left:480px;top:0px;width:400px;">
+  <div data-drags-parent="1" style="font-family:'Share Tech Mono',monospace;color:#5e6f5e;font-size:12px;letter-spacing:.22em;margin-bottom:12px;">02 · MAPA — INACTIVO (NO COMPARTIENDO)</div>
+  <div style="position:relative;width:400px;background:#0b0e0b;border-radius:48px;padding:14px;box-shadow:0 0 0 2px #1a201a,0 24px 60px rgba(0,0,0,.55);">
+    <div style="position:absolute;top:24px;left:50%;transform:translateX(-50%);width:54px;height:5px;border-radius:3px;background:#1a201a;z-index:60;"></div>
+    <div data-screen-label="MAPA-OFF" style="position:relative;width:372px;height:792px;border-radius:36px;overflow:hidden;background:#0A0F0A;color:#21FF6C;font-family:'VT323',monospace;display:flex;flex-direction:column;animation:flick 8s infinite;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 8px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.14em;color:#21FF6C;">
+        <span>21:48</span>
+        <span style="color:#FFC72C;letter-spacing:.2em;">VAULT-TEC PIP-MAP</span>
+        <span style="display:inline-flex;align-items:center;gap:3px;"><span style="display:inline-flex;align-items:center;height:13px;border:1px solid #21FF6C;padding:1px;gap:1px;"><i style="width:5px;height:100%;background:#21FF6C;display:block;"></i><i style="width:5px;height:100%;background:#21FF6C;display:block;"></i><i style="width:5px;height:100%;background:#21FF6C;display:block;"></i><i style="width:5px;height:100%;background:transparent;display:block;"></i></span><i style="width:2px;height:6px;background:#21FF6C;display:block;"></i></span>
+      </div>
+      <div style="display:flex;margin:0 14px;border:1px solid #1F8A4C;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));background:#0a120a;">
+        <div style="flex:1;text-align:center;padding:9px 4px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.18em;color:#06140a;background:#21FF6C;box-shadow:0 0 14px rgba(33,255,108,.5);">◤ MAPA</div>
+        <div style="flex:1;text-align:center;padding:9px 4px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.18em;color:#1F8A4C;">GRUPO</div>
+        <div style="flex:1;text-align:center;padding:9px 4px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.18em;color:#1F8A4C;">ESTADO</div>
+      </div>
+      <div style="position:relative;flex:1;margin:12px 14px;border:1px solid #1F8A4C;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));overflow:hidden;background:radial-gradient(circle at 50% 46%,#0c140c,#0A0F0A 75%);opacity:.92;">
+        <svg viewBox="0 0 344 470" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;">
+          <g stroke="#1F8A4C" stroke-width="1" opacity=".22" fill="none">
+            <path d="M-10 110 H360"/><path d="M-10 230 H360"/><path d="M-10 350 H360"/>
+            <path d="M90 -10 V480"/><path d="M210 -10 V480"/><path d="M300 -10 V480"/>
+            <path d="M90 230 L210 110 L300 230"/><path d="M0 350 L90 230"/>
+          </g>
+          <circle cx="172" cy="235" r="58" fill="none" stroke="#1F8A4C" stroke-width="1" opacity=".3"/>
+          <circle cx="172" cy="235" r="100" fill="none" stroke="#1F8A4C" stroke-width="1" opacity=".2"/>
+        </svg>
+        <!-- own pos paused -->
+        <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);"><span style="position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;background:#6a2424;border:1px solid #E23B3B;"></span><span style="position:absolute;left:14px;top:-7px;font-family:'Share Tech Mono';font-size:11px;color:#E23B3B;white-space:nowrap;">TÚ · OCULTO</span></div>
+        <!-- members still visible but dim -->
+        <div style="position:absolute;left:74%;top:26%;opacity:.55;"><span style="position:absolute;width:9px;height:9px;border-radius:50%;background:#1F8A4C;animation:pulse 2.4s infinite;"></span><span style="position:absolute;left:13px;top:-4px;font-family:'Share Tech Mono';font-size:11px;color:#1F8A4C;white-space:nowrap;">MIEMBRO-02</span></div>
+        <div style="position:absolute;left:22%;top:74%;opacity:.55;"><span style="position:absolute;width:8px;height:8px;border-radius:50%;background:#1F8A4C;"></span><span style="position:absolute;left:13px;top:-4px;font-family:'Share Tech Mono';font-size:11px;color:#1F8A4C;white-space:nowrap;">MIEMBRO-03</span></div>
+        <div style="position:absolute;top:10px;left:10px;font-family:'Share Tech Mono';font-size:10px;letter-spacing:.12em;color:#1F8A4C;border:1px solid #1F8A4C;background:rgba(10,15,10,.7);padding:4px 7px;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));">SUJETOS RASTREADOS: 02</div>
+        <div style="position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:5px;font-family:'Share Tech Mono';font-size:10px;letter-spacing:.12em;color:#E23B3B;border:1px solid #E23B3B;background:rgba(10,15,10,.7);padding:4px 7px;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));animation:blink 1.6s steps(1) infinite;"><span style="width:6px;height:6px;border-radius:50%;background:#E23B3B;"></span>SEÑAL: EN PAUSA</div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;"><span style="font-family:'Share Tech Mono';font-size:13px;letter-spacing:.2em;color:#E23B3B;border:1px dashed #E23B3B;padding:8px 14px;background:rgba(10,15,10,.6);">TU POSICIÓN NO SE COMPARTE</span></div>
+      </div>
+      <!-- SHARE SWITCH (inactive) -->
+      <div style="margin:0 14px 18px;position:relative;border:2px solid #E23B3B;background:#100808;padding:16px 18px;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));box-shadow:inset 0 0 18px rgba(226,59,59,.12);display:flex;align-items:center;gap:14px;">
+        <span style="width:14px;height:14px;border-radius:50%;background:#E23B3B;flex-shrink:0;"></span>
+        <div style="flex:1;"><div style="font-size:26px;line-height:1;color:#ff7676;text-shadow:0 0 10px rgba(226,59,59,.4);">INACTIVO</div><div style="font-family:'Share Tech Mono';font-size:11px;letter-spacing:.14em;color:#1F8A4C;margin-top:3px;">SIN TRANSMITIR · TOCAR PARA COMPARTIR</div></div>
+        <div style="position:relative;width:54px;height:30px;border:1px solid #E23B3B;background:rgba(226,59,59,.12);clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));flex-shrink:0;"><span style="position:absolute;top:2px;left:2px;width:24px;height:24px;background:#6a2424;border:1px solid #E23B3B;clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));"></span></div>
+      </div>
+      <div style="position:absolute;inset:0;z-index:50;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.22) 3px,rgba(0,0,0,0) 4px);background-size:100% 6px;animation:scan .35s linear infinite;mix-blend-mode:multiply;"></div>
+      <div style="position:absolute;inset:0;z-index:51;pointer-events:none;border-radius:36px;box-shadow:inset 0 0 70px rgba(0,0,0,.65);background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.5) 100%);"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FRAME 3 · GRUPO ============ -->
+<div style="position:absolute;left:960px;top:0px;width:400px;">
+  <div data-drags-parent="1" style="font-family:'Share Tech Mono',monospace;color:#5e6f5e;font-size:12px;letter-spacing:.22em;margin-bottom:12px;">03 · GRUPO — REGISTRO DE MIEMBROS</div>
+  <div style="position:relative;width:400px;background:#0b0e0b;border-radius:48px;padding:14px;box-shadow:0 0 0 2px #1a201a,0 24px 60px rgba(0,0,0,.55);">
+    <div style="position:absolute;top:24px;left:50%;transform:translateX(-50%);width:54px;height:5px;border-radius:3px;background:#1a201a;z-index:60;"></div>
+    <div data-screen-label="GRUPO" style="position:relative;width:372px;height:792px;border-radius:36px;overflow:hidden;background:#0A0F0A;color:#21FF6C;font-family:'VT323',monospace;display:flex;flex-direction:column;animation:flick 8s infinite;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 8px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.14em;color:#21FF6C;">
+        <span>21:48</span>
+        <span style="color:#FFC72C;letter-spacing:.2em;">VAULT-TEC PIP-MAP</span>
+        <span style="display:inline-flex;align-items:center;gap:3px;"><span style="display:inline-flex;align-items:center;height:13px;border:1px solid #21FF6C;padding:1px;gap:1px;"><i style="width:5px;height:100%;background:#21FF6C;display:block;"></i><i style="width:5px;height:100%;background:#21FF6C;display:block;"></i><i style="width:5px;height:100%;background:#21FF6C;display:block;"></i><i style="width:5px;height:100%;background:transparent;display:block;"></i></span><i style="width:2px;height:6px;background:#21FF6C;display:block;"></i></span>
+      </div>
+      <div style="display:flex;margin:0 14px;border:1px solid #1F8A4C;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));background:#0a120a;">
+        <div style="flex:1;text-align:center;padding:9px 4px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.18em;color:#1F8A4C;">MAPA</div>
+        <div style="flex:1;text-align:center;padding:9px 4px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.18em;color:#06140a;background:#21FF6C;box-shadow:0 0 14px rgba(33,255,108,.5);">◤ GRUPO</div>
+        <div style="flex:1;text-align:center;padding:9px 4px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.18em;color:#1F8A4C;">ESTADO</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:14px 18px 6px;font-family:'Share Tech Mono';font-size:11px;letter-spacing:.18em;color:#1F8A4C;">
+        <span>REGISTRO DE GRUPO</span><span style="color:#21FF6C;">SUJETOS: 04</span>
+      </div>
+      <div style="flex:1;margin:0 14px;border:1px solid #1F8A4C;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));background:#0E160E;overflow:hidden;">
+        <!-- selected row -->
+        <div style="display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:12px;padding:14px;border-left:2px solid #21FF6C;background:rgba(33,255,108,.09);box-shadow:inset 0 0 20px rgba(33,255,108,.08);">
+          <span style="width:9px;height:9px;border-radius:50%;background:#21FF6C;box-shadow:0 0 8px #21FF6C;animation:pulse 1.6s infinite;"></span>
+          <span><span style="display:block;font-size:21px;line-height:1;">OVERSEER-01</span><span style="display:block;font-family:'Share Tech Mono';font-size:11px;color:#FFB642;margin-top:3px;">34.05N 118.24W</span></span>
+          <span style="text-align:right;"><span style="display:block;font-family:'Share Tech Mono';font-size:11px;letter-spacing:.1em;color:#21FF6C;">EN LÍNEA</span><span style="display:block;font-family:'Share Tech Mono';font-size:10px;color:#1F8A4C;">ÚLT. SEÑAL: 2s</span></span>
+        </div>
+        <div style="display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:12px;padding:14px;border-top:1px solid rgba(31,138,76,.25);">
+          <span style="width:9px;height:9px;border-radius:50%;background:#21FF6C;box-shadow:0 0 8px #21FF6C;animation:pulse 1.9s infinite;"></span>
+          <span><span style="display:block;font-size:21px;line-height:1;">MIEMBRO-02</span><span style="display:block;font-family:'Share Tech Mono';font-size:11px;color:#FFB642;margin-top:3px;">34.07N 118.21W</span></span>
+          <span style="text-align:right;"><span style="display:block;font-family:'Share Tech Mono';font-size:11px;letter-spacing:.1em;color:#21FF6C;">EN LÍNEA</span><span style="display:block;font-family:'Share Tech Mono';font-size:10px;color:#1F8A4C;">ÚLT. SEÑAL: 3s</span></span>
+        </div>
+        <div style="display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:12px;padding:14px;border-top:1px solid rgba(31,138,76,.25);">
+          <span style="width:9px;height:9px;border-radius:50%;background:#E23B3B;box-shadow:0 0 8px #E23B3B;"></span>
+          <span><span style="display:block;font-size:21px;line-height:1;color:#cfe;">MIEMBRO-03</span><span style="display:block;font-family:'Share Tech Mono';font-size:11px;color:#1F8A4C;margin-top:3px;">SEÑAL PERDIDA</span></span>
+          <span style="text-align:right;"><span style="display:block;font-family:'Share Tech Mono';font-size:11px;letter-spacing:.1em;color:#E23B3B;">FUERA DE RANGO</span><span style="display:block;font-family:'Share Tech Mono';font-size:10px;color:#1F8A4C;">ÚLT. SEÑAL: 47s</span></span>
+        </div>
+        <div style="display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:12px;padding:14px;border-top:1px solid rgba(31,138,76,.25);">
+          <span style="width:9px;height:9px;border-radius:50%;background:#21FF6C;box-shadow:0 0 8px #21FF6C;animation:pulse 2.2s infinite;"></span>
+          <span><span style="display:block;font-size:21px;line-height:1;">EXPLORADOR-04</span><span style="display:block;font-family:'Share Tech Mono';font-size:11px;color:#FFB642;margin-top:3px;">34.02N 118.30W</span></span>
+          <span style="text-align:right;"><span style="display:block;font-family:'Share Tech Mono';font-size:11px;letter-spacing:.1em;color:#21FF6C;">EN LÍNEA</span><span style="display:block;font-family:'Share Tech Mono';font-size:10px;color:#1F8A4C;">ÚLT. SEÑAL: 5s</span></span>
+        </div>
+      </div>
+      <div style="margin:14px;display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono';font-size:12px;color:#21FF6C;"><span style="color:#1F8A4C;">&gt;</span>ENLACE ESTABLECIDO · 3 EN LÍNEA<span style="display:inline-block;width:8px;height:13px;background:#21FF6C;animation:blink 1s steps(1) infinite;box-shadow:0 0 6px #21FF6C;"></span></div>
+      <div style="position:absolute;inset:0;z-index:50;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.22) 3px,rgba(0,0,0,0) 4px);background-size:100% 6px;animation:scan .35s linear infinite;mix-blend-mode:multiply;"></div>
+      <div style="position:absolute;inset:0;z-index:51;pointer-events:none;border-radius:36px;box-shadow:inset 0 0 70px rgba(0,0,0,.65);background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.5) 100%);"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FRAME 4 · ACCESO ============ -->
+<div style="position:absolute;left:1440px;top:0px;width:400px;">
+  <div data-drags-parent="1" style="font-family:'Share Tech Mono',monospace;color:#5e6f5e;font-size:12px;letter-spacing:.22em;margin-bottom:12px;">04 · ACCESO — ARRANQUE DE TERMINAL</div>
+  <div style="position:relative;width:400px;background:#0b0e0b;border-radius:48px;padding:14px;box-shadow:0 0 0 2px #1a201a,0 24px 60px rgba(0,0,0,.55);">
+    <div style="position:absolute;top:24px;left:50%;transform:translateX(-50%);width:54px;height:5px;border-radius:3px;background:#1a201a;z-index:60;"></div>
+    <div data-screen-label="ACCESO" style="position:relative;width:372px;height:792px;border-radius:36px;overflow:hidden;background:#0A0F0A;color:#21FF6C;font-family:'VT323',monospace;display:flex;flex-direction:column;padding:26px 22px;animation:flick 8s infinite;">
+      <!-- boot header -->
+      <div style="font-family:'Share Tech Mono';font-size:11px;line-height:1.5;color:#1F8A4C;letter-spacing:.05em;">
+        ROBCO INDUSTRIES (TM) UNIFIED OS<br>COPYRIGHT 2075-2077 ROBCO IND.<br>- TERMITE-LINK PROTOCOL v2.77 -
+      </div>
+      <!-- vault logo -->
+      <div style="display:flex;justify-content:center;margin:26px 0 14px;">
+        <div style="position:relative;filter:drop-shadow(0 0 14px rgba(33,255,108,.4));">
+          <svg viewBox="0 0 140 140" width="150" height="150">
+            <circle cx="70" cy="70" r="64" fill="none" stroke="#1F8A4C" stroke-width="9" stroke-dasharray="5 13"/>
+            <circle cx="70" cy="70" r="52" fill="#0E160E" stroke="#21FF6C" stroke-width="2"/>
+            <circle cx="70" cy="70" r="38" fill="none" stroke="#1F8A4C" stroke-width="1.5"/>
+            <g stroke="#21FF6C" stroke-width="3" stroke-linecap="round">
+              <line x1="70" y1="34" x2="70" y2="50"/><line x1="70" y1="90" x2="70" y2="106"/>
+              <line x1="34" y1="70" x2="50" y2="70"/><line x1="90" y1="70" x2="106" y2="70"/>
+              <line x1="45" y1="45" x2="56" y2="56"/><line x1="84" y1="84" x2="95" y2="95"/>
+              <line x1="95" y1="45" x2="84" y2="56"/><line x1="56" y1="84" x2="45" y2="95"/>
+            </g>
+            <circle cx="70" cy="70" r="15" fill="#0A0F0A" stroke="#21FF6C" stroke-width="2"/>
+          </svg>
+          <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:'Share Tech Mono';font-size:14px;letter-spacing:.05em;color:#21FF6C;">111</span>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:30px;line-height:1;color:#FFC72C;text-shadow:0 0 10px rgba(255,199,44,.4);letter-spacing:.04em;">VAULT-TEC PIP-MAP</div>
+        <div style="font-family:'Share Tech Mono';font-size:11px;letter-spacing:.22em;color:#1F8A4C;margin-top:6px;">SISTEMA DE RASTREO DE GRUPO</div>
+      </div>
+      <!-- boot log -->
+      <div style="font-family:'Share Tech Mono';font-size:13px;line-height:1.6;margin-top:24px;">
+        <div style="color:#21FF6C;">&gt; INICIANDO RASTREO..........[ OK ]</div>
+        <div style="color:#21FF6C;">&gt; CARGANDO MAPA..............[ OK ]</div>
+        <div style="color:#21FF6C;">&gt; ENLACE SATELITAL...........[ OK ]</div>
+        <div style="color:#FFB642;">&gt; ESPERANDO CÓDIGO DE GRUPO</div>
+      </div>
+      <!-- code field -->
+      <div style="margin-top:auto;">
+        <div style="font-family:'Share Tech Mono';font-size:11px;letter-spacing:.2em;color:#21FF6C;margin-bottom:8px;">CÓDIGO DE GRUPO</div>
+        <div style="display:flex;align-items:center;background:#0a120a;border:1px solid #21FF6C;padding:13px 14px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));box-shadow:0 0 14px rgba(33,255,108,.3),inset 0 0 10px rgba(33,255,108,.08);">
+          <span style="font-size:24px;letter-spacing:.28em;color:#21FF6C;">VLT-7▮4▮2</span>
+          <span style="display:inline-block;width:11px;height:22px;background:#21FF6C;margin-left:4px;animation:blink 1s steps(1) infinite;box-shadow:0 0 8px #21FF6C;"></span>
+        </div>
+        <div style="margin-top:16px;background:#21FF6C;color:#06140a;border:1px solid #21FF6C;padding:15px;text-align:center;font-family:'Share Tech Mono';font-size:15px;letter-spacing:.16em;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));box-shadow:0 0 18px rgba(33,255,108,.45);">▸ CONCEDER ACCESO</div>
+        <div style="text-align:center;font-family:'Share Tech Mono';font-size:10px;letter-spacing:.18em;color:#1F8A4C;margin-top:14px;">ACCESO RESTRINGIDO · AUTORIZACIÓN VAULT-TEC</div>
+      </div>
+      <div style="position:absolute;inset:0;z-index:50;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.22) 3px,rgba(0,0,0,0) 4px);background-size:100% 6px;animation:scan .35s linear infinite;mix-blend-mode:multiply;"></div>
+      <div style="position:absolute;inset:0;z-index:51;pointer-events:none;border-radius:36px;box-shadow:inset 0 0 70px rgba(0,0,0,.65);background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.5) 100%);"></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
