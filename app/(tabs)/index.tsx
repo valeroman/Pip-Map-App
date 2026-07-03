@@ -1,95 +1,88 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import { PipScreen } from '@/components/PipScreen';
-import { PipCard } from '@/components/PipCard';
 import { PipText } from '@/components/PipText';
-import { PipButton } from '@/components/PipButton';
-import { StatBar } from '@/components/StatBar';
+import { StatusBarHeader } from '@/components/StatusBarHeader';
+import { TransmitSwitch } from '@/components/TransmitSwitch';
+import { supabase } from '@/lib/supabase';
 import { colors } from '@/theme';
 
-export default function StatusScreen() {
+export default function MapScreen() {
+  const [transmitting, setTransmitting] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    await supabase.auth.signOut();
+    setLoggingOut(false);
+  };
+
   return (
-    <PipScreen>
-      <ScrollView contentContainerStyle={styles.content}>
-        <PipText variant="display" glow>
-          Vault-Tec
-        </PipText>
-        <PipText variant="label" color={colors.textDim} style={styles.subtitle}>
-          Sistema de monitoreo del portador
-        </PipText>
+    <PipScreen style={styles.screen}>
+      <StatusBarHeader onLogout={handleLogout} loggingOut={loggingOut} />
 
-        <PipCard style={styles.card}>
-          <PipText variant="title" glow>
-            Signos vitales
+      <View style={styles.mapPlaceholder}>
+        <View style={[styles.pill, styles.pillTopLeft]}>
+          <PipText variant="small" color={colors.primary}>
+            SEÑAL: ESTABLE
           </PipText>
-          <View style={styles.statBlock}>
-            <StatBar label="Salud" value={82} color={colors.primary} />
-            <StatBar label="Radiación" value={24} color={colors.warning} />
-            <StatBar label="Hidratación" value={60} color={colors.accent} />
-            <StatBar label="Nivel de amenaza" value={12} color={colors.danger} />
-          </View>
-        </PipCard>
-
-        <PipCard style={styles.card} borderColor={colors.info}>
-          <PipText variant="title" color={colors.accent} glow>
-            S.P.E.C.I.A.L.
+        </View>
+        <View style={[styles.pill, styles.pillTopRight, { borderColor: colors.warning }]}>
+          <PipText variant="small" color={colors.warning}>
+            SUJETOS: 00
           </PipText>
-          <View style={styles.grid}>
-            {SPECIAL.map((stat) => (
-              <View key={stat.label} style={styles.gridItem}>
-                <PipText variant="label" color={colors.textDim}>
-                  {stat.label}
-                </PipText>
-                <PipText variant="title" glow>
-                  {stat.value}
-                </PipText>
-              </View>
-            ))}
-          </View>
-        </PipCard>
+        </View>
 
-        <PipButton label="Actualizar estado" style={styles.button} />
-      </ScrollView>
+        <View style={styles.mapCenter}>
+          <PipText variant="title" color={colors.textDim}>
+            Mapa no disponible
+          </PipText>
+          <PipText variant="small" color={colors.textDim} style={styles.mapCenterSub}>
+            POSICIÓN NO ADQUIRIDA · SPEC 02
+          </PipText>
+        </View>
+      </View>
+
+      <TransmitSwitch value={transmitting} onToggle={() => setTransmitting((v) => !v)} />
     </PipScreen>
   );
 }
 
-const SPECIAL = [
-  { label: 'FUE', value: 5 },
-  { label: 'PER', value: 6 },
-  { label: 'RES', value: 4 },
-  { label: 'CAR', value: 3 },
-  { label: 'INT', value: 7 },
-  { label: 'AGI', value: 5 },
-  { label: 'SUE', value: 4 },
-];
-
 const styles = StyleSheet.create({
-  content: {
-    paddingBottom: 40,
-  },
-  subtitle: {
-    marginTop: -4,
-    marginBottom: 20,
-  },
-  card: {
-    marginBottom: 16,
-  },
-  statBlock: {
-    marginTop: 12,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 12,
+  screen: {
     gap: 16,
   },
-  gridItem: {
-    width: '20%',
-    minWidth: 60,
+  mapPlaceholder: {
+    position: 'relative',
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  button: {
-    alignSelf: 'flex-start',
-    marginTop: 4,
+  mapCenter: {
+    alignItems: 'center',
+    gap: 4,
+  },
+  mapCenterSub: {
+    textAlign: 'center',
+  },
+  pill: {
+    position: 'absolute',
+    borderWidth: 1,
+    borderColor: colors.primary,
+    paddingVertical: 4,
+    paddingHorizontal: 7,
+    backgroundColor: colors.background,
+  },
+  pillTopLeft: {
+    top: 10,
+    left: 10,
+  },
+  pillTopRight: {
+    top: 10,
+    right: 10,
   },
 });

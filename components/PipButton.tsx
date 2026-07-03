@@ -7,10 +7,12 @@ import { PipText } from './PipText';
 type Props = PressableProps & {
   label: string;
   color?: string;
+  filled?: boolean;
 };
 
-export function PipButton({ label, color = colors.primary, style, ...rest }: Props) {
+export function PipButton({ label, color = colors.primary, filled = false, style, ...rest }: Props) {
   const [pressed, setPressed] = useState(false);
+  const isFilled = filled ? !pressed : pressed;
 
   return (
     <Pressable
@@ -19,11 +21,11 @@ export function PipButton({ label, color = colors.primary, style, ...rest }: Pro
       style={(state) => [
         styles.base,
         { borderColor: color },
-        pressed ? { backgroundColor: color } : boxGlow(color, 6),
+        isFilled ? { backgroundColor: color } : boxGlow(color, 6),
         typeof style === 'function' ? style(state) : style,
       ]}
       {...rest}>
-      <PipText variant="label" color={pressed ? colors.background : color}>
+      <PipText variant="label" color={isFilled ? colors.background : color}>
         {label}
       </PipText>
     </Pressable>

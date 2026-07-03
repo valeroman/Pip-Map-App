@@ -1,12 +1,13 @@
 import { Link } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { PipButton } from '@/components/PipButton';
 import { PipCard } from '@/components/PipCard';
 import { PipInput } from '@/components/PipInput';
 import { PipScreen } from '@/components/PipScreen';
 import { PipText } from '@/components/PipText';
+import { TerminalBootHeader } from '@/components/TerminalBootHeader';
 import { translateAuthError } from '@/lib/authErrors';
 import { supabase } from '@/lib/supabase';
 import { colors } from '@/theme';
@@ -63,70 +64,108 @@ export default function RegisterScreen() {
 
   return (
     <PipScreen>
-      <PipText variant="title" glow style={styles.header}>
-        Registro Vault-Tec
-      </PipText>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled">
+          <TerminalBootHeader lines={['INICIANDO REGISTRO', 'VALIDANDO IDENTIDAD', 'ENLACE SATELITAL']} />
 
-      {formError ? (
-        <PipCard borderColor={colors.danger} style={styles.errorCard}>
-          <PipText variant="label" color={colors.danger}>
-            {formError}
+          <View style={styles.titleBlock}>
+            <PipText variant="display" color={colors.accent} glow>
+              Vault-Tec Pip-Map
+            </PipText>
+            <PipText variant="label" color={colors.textDim} style={styles.subtitle}>
+              Alta de nuevo morador
+            </PipText>
+          </View>
+
+          <PipText variant="small" color={colors.warning} style={styles.waiting}>
+            &gt; ESPERANDO DATOS DE REGISTRO
           </PipText>
-        </PipCard>
-      ) : null}
 
-      {formInfo ? (
-        <PipCard borderColor={colors.primary} style={styles.errorCard}>
-          <PipText variant="label" color={colors.primary}>
-            {formInfo}
+          {formError ? (
+            <PipCard borderColor={colors.danger} style={styles.errorCard}>
+              <PipText variant="label" color={colors.danger}>
+                {formError}
+              </PipText>
+            </PipCard>
+          ) : null}
+
+          {formInfo ? (
+            <PipCard borderColor={colors.primary} style={styles.errorCard}>
+              <PipText variant="label" color={colors.primary}>
+                {formInfo}
+              </PipText>
+            </PipCard>
+          ) : null}
+
+          <View style={styles.form}>
+            <PipInput
+              label="Nombre"
+              value={displayName}
+              onChangeText={setDisplayName}
+              error={nameError}
+              placeholder="Morador 111"
+            />
+            <PipInput
+              label="Email"
+              value={email}
+              onChangeText={setEmail}
+              error={emailError}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              placeholder="usuario@vault-tec.com"
+            />
+            <PipInput
+              label="Contraseña"
+              value={password}
+              onChangeText={setPassword}
+              error={passwordError}
+              secureTextEntry
+              placeholder="••••••••"
+            />
+            <PipButton
+              filled
+              label={loading ? 'Registrando...' : 'Crear acceso'}
+              onPress={handleSubmit}
+              disabled={loading}
+              style={styles.submit}
+            />
+
+            <Link href="/(auth)/login" style={styles.link}>
+              <PipText variant="small" color={colors.textDim}>
+                ¿Ya tenés cuenta? Iniciá sesión
+              </PipText>
+            </Link>
+          </View>
+
+          <PipText variant="small" color={colors.textDim} style={styles.footer}>
+            ACCESO RESTRINGIDO · AUTORIZACIÓN VAULT-TEC
           </PipText>
-        </PipCard>
-      ) : null}
-
-      <View style={styles.form}>
-        <PipInput
-          label="Nombre"
-          value={displayName}
-          onChangeText={setDisplayName}
-          error={nameError}
-          placeholder="Morador 111"
-        />
-        <PipInput
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          error={emailError}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          placeholder="usuario@vault-tec.com"
-        />
-        <PipInput
-          label="Contraseña"
-          value={password}
-          onChangeText={setPassword}
-          error={passwordError}
-          secureTextEntry
-          placeholder="••••••••"
-        />
-        <PipButton
-          label={loading ? 'Registrando...' : 'Registrarse'}
-          onPress={handleSubmit}
-          disabled={loading}
-        />
-
-        <Link href="/(auth)/login" style={styles.link}>
-          <PipText variant="small" color={colors.textDim}>
-            ¿Ya tenés cuenta? Iniciá sesión
-          </PipText>
-        </Link>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </PipScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    marginBottom: 20,
+  flex: {
+    flex: 1,
+  },
+  content: {
+    flexGrow: 1,
+    paddingBottom: 24,
+  },
+  titleBlock: {
+    marginBottom: 14,
+  },
+  subtitle: {
+    marginTop: 4,
+  },
+  waiting: {
+    marginBottom: 18,
   },
   errorCard: {
     marginBottom: 16,
@@ -134,8 +173,16 @@ const styles = StyleSheet.create({
   form: {
     gap: 14,
   },
+  submit: {
+    marginTop: 4,
+  },
   link: {
     alignSelf: 'center',
     marginTop: 4,
+  },
+  footer: {
+    textAlign: 'center',
+    marginTop: 'auto',
+    paddingTop: 24,
   },
 });

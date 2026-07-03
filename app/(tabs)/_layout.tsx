@@ -31,10 +31,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'STATUS',
+          title: 'MAPA',
           tabBarIcon: ({ color }) => (
             <SymbolView
-              name={{ ios: 'waveform.path.ecg', android: 'monitor_heart', web: 'monitor_heart' }}
+              name={{ ios: 'map', android: 'map', web: 'map' }}
               tintColor={color}
               size={24}
             />
