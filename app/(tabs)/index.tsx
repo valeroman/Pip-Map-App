@@ -1,16 +1,53 @@
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useState, type ComponentProps, type ComponentType } from 'react';
+import { Linking, StyleSheet, View } from 'react-native';
 
+import { PipButton } from '@/components/PipButton';
+import type { default as PipMapType } from '@/components/PipMap';
 import { PipScreen } from '@/components/PipScreen';
 import { PipText } from '@/components/PipText';
 import { StatusBarHeader } from '@/components/StatusBarHeader';
 import { TransmitSwitch } from '@/components/TransmitSwitch';
+import { useLocation } from '@/hooks/useLocation';
 import { supabase } from '@/lib/supabase';
 import { colors } from '@/theme';
+
+const STABLE_ACCURACY_THRESHOLD_METERS = 30;
+
+function statusMessage(status: ReturnType<typeof useLocation>['status']) {
+  switch (status) {
+    case 'idle':
+    case 'requesting':
+      return 'SOLICITANDO PERMISO…';
+    case 'denied':
+      return 'PERMISO DENEGADO';
+    case 'unavailable':
+      return 'SIN SEÑAL';
+    case 'granted':
+      return 'ADQUIRIENDO POSICIÓN…';
+  }
+}
 
 export default function MapScreen() {
   const [transmitting, setTransmitting] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const { coords, accuracy, status } = useLocation();
+
+  // Loaded lazily on mount (never during Node-side SSR): PipMap pulls in
+  // leaflet, which touches `window` at import time and would crash the
+  // web static-render pass if imported eagerly.
+  const [PipMap, setPipMap] = useState<ComponentType<ComponentProps<typeof PipMapType>> | null>(
+    null
+  );
+
+  useEffect(() => {
+    let mounted = true;
+    import('@/components/PipMap').then((mod) => {
+      if (mounted) setPipMap(() => mod.default);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -18,14 +55,25 @@ export default function MapScreen() {
     setLoggingOut(false);
   };
 
+  const hasFix = status === 'granted' && coords != null;
+
+  const signal = useMemo(() => {
+    if (!hasFix || accuracy == null) {
+      return { label: '—', color: colors.textDim };
+    }
+    return accuracy <= STABLE_ACCURACY_THRESHOLD_METERS
+      ? { label: 'ESTABLE', color: colors.primary }
+      : { label: 'DÉBIL', color: colors.warning };
+  }, [hasFix, accuracy]);
+
   return (
     <PipScreen style={styles.screen}>
       <StatusBarHeader onLogout={handleLogout} loggingOut={loggingOut} />
 
       <View style={styles.mapPlaceholder}>
-        <View style={[styles.pill, styles.pillTopLeft]}>
-          <PipText variant="small" color={colors.primary}>
-            SEÑAL: ESTABLE
+        <View style={[styles.pill, styles.pillTopLeft, { borderColor: signal.color }]}>
+          <PipText variant="small" color={signal.color}>
+            SEÑAL: {signal.label}
           </PipText>
         </View>
         <View style={[styles.pill, styles.pillTopRight, { borderColor: colors.warning }]}>
@@ -34,14 +82,29 @@ export default function MapScreen() {
           </PipText>
         </View>
 
-        <View style={styles.mapCenter}>
-          <PipText variant="title" color={colors.textDim}>
-            Mapa no disponible
-          </PipText>
-          <PipText variant="small" color={colors.textDim} style={styles.mapCenterSub}>
-            POSICIÓN NO ADQUIRIDA · SPEC 02
-          </PipText>
-        </View>
+        {hasFix && coords && PipMap ? (
+          <PipMap
+            lat={coords.lat}
+            lng={coords.lng}
+            accuracy={accuracy}
+            follow
+            dom={{ scrollEnabled: false, style: styles.mapDom }}
+          />
+        ) : (
+          <View style={styles.mapCenter}>
+            <PipText variant="title" color={colors.textDim}>
+              {hasFix ? 'CARGANDO MAPA…' : statusMessage(status)}
+            </PipText>
+            {status === 'denied' && (
+              <PipButton
+                label="ABRIR AJUSTES"
+                color={colors.warning}
+                onPress={() => Linking.openSettings()}
+                style={styles.settingsButton}
+              />
+            )}
+          </View>
+        )}
       </View>
 
       <TransmitSwitch value={transmitting} onToggle={() => setTransmitting((v) => !v)} />
@@ -61,13 +124,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  mapDom: {
+    width: '100%',
+    height: '100%',
   },
   mapCenter: {
     alignItems: 'center',
     gap: 4,
   },
-  mapCenterSub: {
-    textAlign: 'center',
+  settingsButton: {
+    marginTop: 12,
   },
   pill: {
     position: 'absolute',
@@ -76,6 +144,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 7,
     backgroundColor: colors.background,
+    zIndex: 1,
   },
   pillTopLeft: {
     top: 10,
