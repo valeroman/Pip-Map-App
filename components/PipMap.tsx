@@ -3,7 +3,7 @@
 import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo } from "react";
 import L from "leaflet";
-import { Circle, MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import { Circle, MapContainer, Marker, Polyline, TileLayer, useMap } from "react-leaflet";
 
 // Android's WebView renders pages without a viewport meta tag by default,
 // laying them out like a desktop page. That breaks every height:100%/vh
@@ -21,6 +21,7 @@ interface Props {
   lng: number;
   accuracy: number | null;
   follow: boolean;
+  routePoints: { lat: number; lng: number }[];
   dom: import("expo/dom").DOMProps;
 }
 
@@ -74,8 +75,12 @@ function SizeToViewport() {
   return null;
 }
 
-export default function PipMap({ lat, lng, accuracy, follow }: Props) {
+export default function PipMap({ lat, lng, accuracy, follow, routePoints }: Props) {
   const center = useMemo<[number, number]>(() => [lat, lng], [lat, lng]);
+  const routePositions = useMemo<[number, number][]>(
+    () => routePoints.map((p) => [p.lat, p.lng]),
+    [routePoints],
+  );
 
   return (
     <>
@@ -135,6 +140,16 @@ export default function PipMap({ lat, lng, accuracy, follow }: Props) {
               fillColor: "#21FF6C",
               fillOpacity: 0.12,
               weight: 1,
+            }}
+          />
+        )}
+        {routePositions.length > 1 && (
+          <Polyline
+            positions={routePositions}
+            pathOptions={{
+              color: "#21FF6C",
+              weight: 4,
+              opacity: 0.9,
             }}
           />
         )}
