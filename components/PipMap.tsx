@@ -46,10 +46,10 @@ export default function PipMap({ lat, lng, accuracy, follow }: Props) {
   return (
     <>
       <style>{`
-        html, body { height: 100%; margin: 0; background: #0A0F0A; }
+        html, body, #root { height: 100%; width: 100%; margin: 0; background: #0A0F0A; }
         .leaflet-container {
-          height: 100%;
-          width: 100%;
+          width: 100vw;
+          height: 100vh;
           background: #0A0F0A;
         }
         .leaflet-tile-pane {
