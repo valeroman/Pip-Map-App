@@ -40,6 +40,25 @@ function FollowOnUpdate({
   return null;
 }
 
+// The WebView may not have resolved its layout yet when Leaflet first
+// measures the container, so the map can initialize at 0x0 and never
+// recompute on its own. Re-measure once mounted and on every resize.
+function InvalidateOnResize() {
+  const map = useMap();
+
+  useEffect(() => {
+    map.invalidateSize();
+
+    const container = map.getContainer();
+    const observer = new ResizeObserver(() => map.invalidateSize());
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, [map]);
+
+  return null;
+}
+
 export default function PipMap({ lat, lng, accuracy, follow }: Props) {
   const center = useMemo<[number, number]>(() => [lat, lng], [lat, lng]);
 
@@ -87,7 +106,12 @@ export default function PipMap({ lat, lng, accuracy, follow }: Props) {
           100% { transform: scale(2.4); opacity: 0; }
         }
       `}</style>
-      <MapContainer center={center} zoom={17} zoomControl={false}>
+      <MapContainer
+        center={center}
+        zoom={17}
+        zoomControl={false}
+        style={{ height: "100%", width: "100%" }}
+      >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -106,6 +130,7 @@ export default function PipMap({ lat, lng, accuracy, follow }: Props) {
         )}
         <Marker position={center} icon={pipIcon} />
         <FollowOnUpdate lat={lat} lng={lng} follow={follow} />
+        <InvalidateOnResize />
       </MapContainer>
     </>
   );
