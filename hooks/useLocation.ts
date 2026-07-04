@@ -11,6 +11,8 @@ export type LocationStatus =
 export interface UseLocationState {
   coords: { lat: number; lng: number } | null;
   accuracy: number | null;
+  heading: number | null;
+  speed: number | null;
   status: LocationStatus;
   error: string | null;
 }
@@ -19,6 +21,8 @@ export function useLocation(): UseLocationState {
   const [state, setState] = useState<UseLocationState>({
     coords: null,
     accuracy: null,
+    heading: null,
+    speed: null,
     status: "idle",
     error: null,
   });
@@ -52,6 +56,8 @@ export function useLocation(): UseLocationState {
                 lng: location.coords.longitude,
               },
               accuracy: location.coords.accuracy,
+              heading: location.coords.heading,
+              speed: location.coords.speed,
               status: "granted",
               error: null,
             });
