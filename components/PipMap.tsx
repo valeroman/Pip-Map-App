@@ -5,6 +5,17 @@ import { useEffect, useMemo } from "react";
 import L from "leaflet";
 import { Circle, MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 
+// Android's WebView renders pages without a viewport meta tag by default,
+// laying them out like a desktop page. That breaks every height:100%/vh
+// chain in this file (html/body/#root all compute to 0), leaving Leaflet
+// with a 0x0 container. Force a real mobile viewport before anything mounts.
+if (typeof document !== "undefined" && !document.querySelector('meta[name="viewport"]')) {
+  const viewportMeta = document.createElement("meta");
+  viewportMeta.name = "viewport";
+  viewportMeta.content = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no";
+  document.head.appendChild(viewportMeta);
+}
+
 interface Props {
   lat: number;
   lng: number;
@@ -40,20 +51,24 @@ function FollowOnUpdate({
   return null;
 }
 
-// The WebView may not have resolved its layout yet when Leaflet first
-// measures the container, so the map can initialize at 0x0 and never
-// recompute on its own. Re-measure once mounted and on every resize.
-function InvalidateOnResize() {
+// Android WebView has been observed computing `vh`/`vw` (and ancestor-based
+// `%`) as 0 for this container, leaving Leaflet with a 0x0 map. Size it in
+// real pixels from window dimensions instead, which is unaffected by that.
+function SizeToViewport() {
   const map = useMap();
 
   useEffect(() => {
-    map.invalidateSize();
-
     const container = map.getContainer();
-    const observer = new ResizeObserver(() => map.invalidateSize());
-    observer.observe(container);
 
-    return () => observer.disconnect();
+    const applySize = () => {
+      container.style.width = `${window.innerWidth}px`;
+      container.style.height = `${window.innerHeight}px`;
+      map.invalidateSize();
+    };
+
+    applySize();
+    window.addEventListener("resize", applySize);
+    return () => window.removeEventListener("resize", applySize);
   }, [map]);
 
   return null;
@@ -106,12 +121,7 @@ export default function PipMap({ lat, lng, accuracy, follow }: Props) {
           100% { transform: scale(2.4); opacity: 0; }
         }
       `}</style>
-      <MapContainer
-        center={center}
-        zoom={17}
-        zoomControl={false}
-        style={{ height: "100%", width: "100%" }}
-      >
+      <MapContainer center={center} zoom={17} zoomControl={false}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -130,7 +140,7 @@ export default function PipMap({ lat, lng, accuracy, follow }: Props) {
         )}
         <Marker position={center} icon={pipIcon} />
         <FollowOnUpdate lat={lat} lng={lng} follow={follow} />
-        <InvalidateOnResize />
+        <SizeToViewport />
       </MapContainer>
     </>
   );
