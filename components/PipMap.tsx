@@ -1,18 +1,29 @@
 "use dom";
 
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo } from "react";
-import L from "leaflet";
-import { Circle, MapContainer, Marker, Polyline, TileLayer, useMap } from "react-leaflet";
+import {
+  Circle,
+  MapContainer,
+  Marker,
+  Polyline,
+  TileLayer,
+  useMap,
+} from "react-leaflet";
 
 // Android's WebView renders pages without a viewport meta tag by default,
 // laying them out like a desktop page. That breaks every height:100%/vh
 // chain in this file (html/body/#root all compute to 0), leaving Leaflet
 // with a 0x0 container. Force a real mobile viewport before anything mounts.
-if (typeof document !== "undefined" && !document.querySelector('meta[name="viewport"]')) {
+if (
+  typeof document !== "undefined" &&
+  !document.querySelector('meta[name="viewport"]')
+) {
   const viewportMeta = document.createElement("meta");
   viewportMeta.name = "viewport";
-  viewportMeta.content = "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no";
+  viewportMeta.content =
+    "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no";
   document.head.appendChild(viewportMeta);
 }
 
@@ -75,7 +86,13 @@ function SizeToViewport() {
   return null;
 }
 
-export default function PipMap({ lat, lng, accuracy, follow, routePoints }: Props) {
+export default function PipMap({
+  lat,
+  lng,
+  accuracy,
+  follow,
+  routePoints = [],
+}: Props) {
   const center = useMemo<[number, number]>(() => [lat, lng], [lat, lng]);
   const routePositions = useMemo<[number, number][]>(
     () => routePoints.map((p) => [p.lat, p.lng]),
@@ -126,7 +143,7 @@ export default function PipMap({ lat, lng, accuracy, follow, routePoints }: Prop
           100% { transform: scale(2.4); opacity: 0; }
         }
       `}</style>
-      <MapContainer center={center} zoom={17} zoomControl={false}>
+      <MapContainer center={center} zoom={20} zoomControl={false}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

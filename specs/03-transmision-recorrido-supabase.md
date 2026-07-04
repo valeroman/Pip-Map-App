@@ -1,6 +1,6 @@
 # SPEC 03 — Transmisión de ubicación a Supabase y recorrido estilo Uber
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 01 (auth/perfil), SPEC 02 (mapa Leaflet + useLocation)
 > **Date:** 2026-07-04
 > **Objective:** Transmitir mi posición GPS al grupo actual en Supabase (`live_locations` + `location_history`) mientras el `TransmitSwitch` está activo, y dibujar mi propio recorrido de la sesión como una polyline estilo Uber sobre el mapa de la Spec 02.
@@ -104,16 +104,16 @@ Prop nueva en `components/PipMap.tsx` (además de las de Spec 02):
 
 ## Acceptance criteria
 
-- [ ] Con el `TransmitSwitch` en OFF, no se escribe nada en `live_locations` ni en `location_history`.
-- [ ] Al activar el `TransmitSwitch`, aparece (o se actualiza) una fila en `live_locations` para mi `user_id` y `group_id`, con `sharing=true` y mi posición actual.
-- [ ] Al moverme con el switch en ON, se insertan nuevas filas en `location_history` respetando el throttle (no una fila por cada tick de GPS).
-- [ ] Las filas insertadas en `live_locations`/`location_history` tienen el `group_id` correcto, resuelto desde `group_members`.
-- [ ] `heading` y `speed` se guardan en `live_locations` cuando `expo-location` los provee (no quedan siempre en `null` si el dispositivo los reporta).
-- [ ] En el mapa, se dibuja una polyline verde Pip-Boy que va creciendo con los puntos acumulados desde que activé el switch en esta sesión.
-- [ ] Al desactivar el `TransmitSwitch`, se actualiza `live_locations` con `sharing=false` y dejan de insertarse filas en `location_history`.
-- [ ] Si apago y vuelvo a prender el switch dentro de la misma sesión, la polyline sigue acumulando (no se reinicia); el corte de transmisión no borra el recorrido dibujado.
-- [ ] Cerrar la app con el switch en ON y reabrirla no muestra el recorrido anterior (se acumula de nuevo desde cero, según lo definido en Scope).
-- [ ] No hay errores de Supabase (RLS, columnas faltantes) al hacer upsert/insert con un usuario autenticado válido.
+- [x] Con el `TransmitSwitch` en OFF, no se escribe nada en `live_locations` ni en `location_history`.
+- [x] Al activar el `TransmitSwitch`, aparece (o se actualiza) una fila en `live_locations` para mi `user_id` y `group_id`, con `sharing=true` y mi posición actual.
+- [x] Al moverme con el switch en ON, se insertan nuevas filas en `location_history` respetando el throttle (no una fila por cada tick de GPS).
+- [x] Las filas insertadas en `live_locations`/`location_history` tienen el `group_id` correcto, resuelto desde `group_members`.
+- [x] `heading` y `speed` se guardan en `live_locations` cuando `expo-location` los provee (no quedan siempre en `null` si el dispositivo los reporta).
+- [x] En el mapa, se dibuja una polyline verde Pip-Boy que va creciendo con los puntos acumulados desde que activé el switch en esta sesión.
+- [x] Al desactivar el `TransmitSwitch`, se actualiza `live_locations` con `sharing=false` y dejan de insertarse filas en `location_history`.
+- [x] Si apago y vuelvo a prender el switch dentro de la misma sesión, la polyline sigue acumulando (no se reinicia); el corte de transmisión no borra el recorrido dibujado.
+- [x] Cerrar la app con el switch en ON y reabrirla no muestra el recorrido anterior (se acumula de nuevo desde cero, según lo definido en Scope).
+- [x] No hay errores de Supabase (RLS, columnas faltantes) al hacer upsert/insert con un usuario autenticado válido.
 
 ## Decisions
 
@@ -128,6 +128,10 @@ Prop nueva en `components/PipMap.tsx` (además de las de Spec 02):
 - **No:** mostrar ubicación o recorrido de otros usuarios del grupo, ni suscripción realtime a `live_locations`. Explícitamente diferido a Spec 04 — el usuario no tenía definido ese comportamiento y mezclarlo complica esta spec.
 - **No:** selector de grupo / soporte multi-grupo. Se asume un solo grupo por usuario, resuelto automáticamente desde `group_members`.
 - **No:** nuevas políticas RLS ni gestión de `groups`/`group_members`. Ya existen y se asumen correctas y suficientes.
+
+## Implementation notes (post-implementación)
+
+- `upsertLiveLocation` no usa `.upsert()` con `onConflict: 'user_id'` como se planeó originalmente: la tabla `live_locations` real no tiene una constraint única sobre `user_id`, y Supabase devolvía `there is no unique or exclusion constraint matching the ON CONFLICT specification`. Se implementó como un "upsert manual" (`update` filtrando por `user_id`; si no afecta ninguna fila, `insert`), sin requerir cambios de schema.
 
 ## Identified risks
 
