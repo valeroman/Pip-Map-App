@@ -8,6 +8,7 @@ import { PipText } from '@/components/PipText';
 import { StatusBarHeader } from '@/components/StatusBarHeader';
 import { TransmitSwitch } from '@/components/TransmitSwitch';
 import { useLocation } from '@/hooks/useLocation';
+import { useLocationTransmission } from '@/hooks/useLocationTransmission';
 import { supabase } from '@/lib/supabase';
 import { colors } from '@/theme';
 
@@ -30,7 +31,12 @@ function statusMessage(status: ReturnType<typeof useLocation>['status']) {
 export default function MapScreen() {
   const [transmitting, setTransmitting] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
-  const { coords, accuracy, status } = useLocation();
+  const location = useLocation();
+  const { coords, accuracy, status } = location;
+  const { routePoints, error: transmissionError } = useLocationTransmission(
+    location,
+    transmitting
+  );
 
   // Loaded lazily on mount (never during Node-side SSR): PipMap pulls in
   // leaflet, which touches `window` at import time and would crash the
@@ -88,6 +94,7 @@ export default function MapScreen() {
             lng={coords.lng}
             accuracy={accuracy}
             follow
+            routePoints={routePoints}
             dom={{ scrollEnabled: false, style: styles.mapDom }}
           />
         ) : (
@@ -108,6 +115,11 @@ export default function MapScreen() {
       </View>
 
       <TransmitSwitch value={transmitting} onToggle={() => setTransmitting((v) => !v)} />
+      {transmitting && transmissionError && (
+        <PipText variant="small" color={colors.warning}>
+          {transmissionError}
+        </PipText>
+      )}
     </PipScreen>
   );
 }
