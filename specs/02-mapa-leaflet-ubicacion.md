@@ -1,6 +1,6 @@
 # SPEC 02 — Mapa Leaflet + OpenStreetMap con ubicación en tiempo real
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** 01-login-registro-supabase (la pantalla del mapa vive dentro de las rutas protegidas `(tabs)`)
 > **Date:** 2026-07-03
 > **Objective:** Reemplazar el placeholder del mapa por un mapa Leaflet + OpenStreetMap real que muestre y siga mi propia ubicación GPS en tiempo real, con estética Pip-Boy.
