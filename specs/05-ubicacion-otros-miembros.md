@@ -1,6 +1,6 @@
 # SPEC 05 — Ver ubicación y recorrido de otros miembros del grupo
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 02 (mapa Leaflet), SPEC 03 (transmisión a `live_locations`/`location_history`), SPEC 04 (`GroupContext`, membresía de grupo)
 > **Date:** 2026-07-04
 > **Objective:** Mostrar en el mapa, en tiempo real vía Supabase Realtime, la posición actual y el recorrido de sesión de los demás miembros del grupo, diferenciados visualmente del marcador propio.
@@ -95,15 +95,15 @@ Prop nueva en `components/PipMap.tsx` (además de las de Spec 02/03):
 
 ## Acceptance criteria
 
-- [ ] Con dos cuentas en el mismo grupo, si la cuenta B activa `TransmitSwitch`, la cuenta A ve aparecer un marcador ámbar en la posición de B en tiempo real, sin recargar la pantalla.
-- [ ] Tocar el marcador de B en el mapa de A muestra un popup con el `display_name` de B.
-- [ ] Mientras B se mueve con el switch en ON, A ve crecer una polyline ámbar independiente que sigue el recorrido de B, sin alterar la propia polyline verde de A.
-- [ ] Si B desactiva el `TransmitSwitch`, su marcador y polyline desaparecen del mapa de A dentro de la ventana de staleness (120s desde el último `updated_at`).
-- [ ] Si B fuerza el cierre de la app sin apagar el switch, su marcador desaparece del mapa de A pasados ~120s, sin que A necesite recargar la pantalla.
-- [ ] La píldora `SUJETOS` en el mapa de A muestra la cantidad de miembros del grupo (sin contarse a sí misma) que están activamente compartiendo en ese momento.
-- [ ] Un usuario ajeno al grupo (no presente en `group_members` de ese `group_id`) nunca aparece en el mapa de A, aunque esté transmitiendo activamente a otro grupo.
-- [ ] Al reabrir la pantalla del mapa, el recorrido de los demás miembros arranca vacío y se acumula desde ese momento (no se relee `location_history` histórico).
-- [ ] No hay errores de Supabase (Realtime, RLS) al suscribirse o recibir eventos con un usuario autenticado válido y perteneciente al grupo.
+- [x] Con dos cuentas en el mismo grupo, si la cuenta B activa `TransmitSwitch`, la cuenta A ve aparecer un marcador ámbar en la posición de B en tiempo real, sin recargar la pantalla.
+- [x] Tocar el marcador de B en el mapa de A muestra un popup con el `display_name` de B.
+- [x] Mientras B se mueve con el switch en ON, A ve crecer una polyline ámbar independiente que sigue el recorrido de B, sin alterar la propia polyline verde de A.
+- [x] Si B desactiva el `TransmitSwitch`, su marcador y polyline desaparecen del mapa de A dentro de la ventana de staleness (120s desde el último `updated_at`).
+- [x] Si B fuerza el cierre de la app sin apagar el switch, su marcador desaparece del mapa de A pasados ~120s, sin que A necesite recargar la pantalla.
+- [x] La píldora `SUJETOS` en el mapa de A muestra la cantidad de miembros del grupo (sin contarse a sí misma) que están activamente compartiendo en ese momento.
+- [x] Un usuario ajeno al grupo (no presente en `group_members` de ese `group_id`) nunca aparece en el mapa de A, aunque esté transmitiendo activamente a otro grupo.
+- [x] Al reabrir la pantalla del mapa, el recorrido de los demás miembros arranca vacío y se acumula desde ese momento (no se relee `location_history` histórico).
+- [x] No hay errores de Supabase (Realtime, RLS) al suscribirse o recibir eventos con un usuario autenticado válido y perteneciente al grupo.
 
 ## Decisions
 
@@ -116,6 +116,12 @@ Prop nueva en `components/PipMap.tsx` (además de las de Spec 02/03):
 - **No:** clustering de marcadores, geofencing/alertas de proximidad, colores individuales por usuario, ni ver miembros de otros grupos. No fue pedido y agrega complejidad fuera del objetivo de esta spec.
 - **No:** cache o persistencia offline de las posiciones/recorridos ajenos. Se pierden al cerrar la pantalla, igual que el propio recorrido (Spec 03).
 - **No:** nuevas políticas RLS o cambios de schema. Se asume que el proyecto Supabase ya soporta lectura de `live_locations`/`location_history` de otros miembros del mismo grupo (declarado en Spec 04); si falla, es un fix de configuración, no de código.
+
+## Implementation notes (post-implementación)
+
+- `location_history` no estaba agregada a la publicación `supabase_realtime` en el proyecto Supabase real (a pesar de que Spec 04 asumía que "el schema completo, incluida Realtime, ya está aplicado"). Sin esto, el canal se suscribía sin error aparente en el cliente, pero el servidor de Realtime rechazaba en silencio la suscripción a esa tabla (visible solo inspeccionando los frames crudos del WebSocket, no en los logs normales de la app). Se resolvió con `alter publication supabase_realtime add table public.location_history;` directamente en el proyecto — no fue un cambio de código.
+- `live_locations` sí estaba correctamente configurada de antes (publicación, RLS, `REPLICA IDENTITY FULL`), por eso la posición/marcador funcionó antes que el recorrido durante las pruebas.
+- Para diagnosticar este tipo de problema a futuro: si un canal de Realtime queda en estado `SUBSCRIBED` pero nunca llegan eventos, inspeccionar los frames del WebSocket (DevTools → Network → click en la conexión `websocket` → pestaña Messages) en vez de confiar solo en los callbacks de `supabase-js`, ya que un fallo de suscripción a nivel de tabla se reporta como un mensaje `"system"` con `status: "error"` dentro del socket, no como un error de JavaScript en el cliente.
 
 ## Identified risks
 
