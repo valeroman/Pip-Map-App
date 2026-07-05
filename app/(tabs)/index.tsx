@@ -7,6 +7,7 @@ import { PipScreen } from '@/components/PipScreen';
 import { PipText } from '@/components/PipText';
 import { StatusBarHeader } from '@/components/StatusBarHeader';
 import { TransmitSwitch } from '@/components/TransmitSwitch';
+import { useGroupPresence } from '@/hooks/useGroupPresence';
 import { useLocation } from '@/hooks/useLocation';
 import { useLocationTransmission } from '@/hooks/useLocationTransmission';
 import { supabase } from '@/lib/supabase';
@@ -37,6 +38,7 @@ export default function MapScreen() {
     location,
     transmitting
   );
+  const { members: otherMembers, count: otherMembersCount } = useGroupPresence();
 
   // Loaded lazily on mount (never during Node-side SSR): PipMap pulls in
   // leaflet, which touches `window` at import time and would crash the
@@ -84,7 +86,7 @@ export default function MapScreen() {
         </View>
         <View style={[styles.pill, styles.pillTopRight, { borderColor: colors.warning }]}>
           <PipText variant="small" color={colors.warning}>
-            SUJETOS: 00
+            SUJETOS: {String(otherMembersCount).padStart(2, '0')}
           </PipText>
         </View>
 
@@ -95,6 +97,7 @@ export default function MapScreen() {
             accuracy={accuracy}
             follow
             routePoints={routePoints}
+            otherMembers={otherMembers}
             dom={{ scrollEnabled: false, style: styles.mapDom }}
           />
         ) : (
