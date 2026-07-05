@@ -9,6 +9,7 @@ import {
 import { VT323_400Regular } from '@expo-google-fonts/vt323';
 
 import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { GroupProvider } from '@/context/GroupContext';
 import { colors } from '@/theme';
 
 export {
@@ -59,7 +60,9 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <RootLayoutNav />
+      <GroupProvider>
+        <RootLayoutNav />
+      </GroupProvider>
     </AuthProvider>
   );
 }
