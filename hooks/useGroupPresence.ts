@@ -6,6 +6,7 @@ import { useGroup } from '@/context/GroupContext';
 import { supabase } from '@/lib/supabase';
 
 const RECENT_WINDOW_MS = 120_000; // ventana para considerar "activo" un live_location
+const STALE_CHECK_INTERVAL_MS = 15_000; // recalcula staleness aunque no lleguen eventos nuevos
 
 export type MemberPresence = {
   userId: string;
@@ -47,10 +48,19 @@ export function useGroupPresence(): { members: MemberPresence[]; count: number }
   const groupMembersRef = useRef(groupMembers);
 
   const [presence, setPresence] = useState<Record<string, PresenceEntry>>({});
+  const [staleTick, setStaleTick] = useState(0);
 
   useEffect(() => {
     groupMembersRef.current = groupMembers;
   }, [groupMembers]);
+
+  // Sin eventos nuevos, `presence` no cambia y el filtro de staleness de
+  // `members` (abajo) nunca se re-evalúa. Este tick fuerza esa reevaluación
+  // periódica para sacar a alguien cuyo `live_locations` quedó viejo.
+  useEffect(() => {
+    const interval = setInterval(() => setStaleTick((tick) => tick + 1), STALE_CHECK_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     setPresence({});
@@ -144,7 +154,8 @@ export function useGroupPresence(): { members: MemberPresence[]; count: number }
     return Object.values(presence)
       .filter((entry) => entry.sharing && now - Date.parse(entry.updatedAt) <= RECENT_WINDOW_MS)
       .map(({ sharing: _sharing, ...member }) => member);
-  }, [presence]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presence, staleTick]);
 
   return { members, count: members.length };
 }
