@@ -1,6 +1,6 @@
 # SPEC 04 — Vincular familiares a un grupo (crear / unirse con código)
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 01 (auth/perfil), SPEC 03 (asume `group_id` resuelto vía `group_members`, ahora se completa el flujo para obtenerlo)
 > **Date:** 2026-07-04
 > **Objective:** Permitir que un usuario sin grupo cree uno o se una a uno existente mediante un código de invitación, y ver el nombre, código y miembros de su grupo actual desde el modal de la app.
@@ -121,17 +121,17 @@ Estado local de la pantalla de gate (no persistido):
 
 ## Acceptance criteria
 
-- [ ] Un usuario recién registrado (sin fila en `group_members`) es redirigido a `group-setup` en lugar de `(tabs)` al iniciar sesión.
-- [ ] Desde `group-setup`, crear un grupo con un nombre válido crea una fila en `groups` (con `owner_id` = usuario actual) y una fila en `group_members` para ese mismo usuario, y lo lleva automáticamente a `(tabs)`.
-- [ ] Desde `group-setup`, unirse con un código válido (`join_code` existente) agrega al usuario a `group_members` de ese grupo y lo lleva automáticamente a `(tabs)`.
-- [ ] Unirse con un código inválido o inexistente muestra un error estilizado Pip-Boy (no el texto crudo de Supabase) y no crea ninguna fila.
-- [ ] Un usuario que ya pertenece a un grupo nunca ve la pantalla `group-setup` al reabrir la app (entra directo a `(tabs)`).
-- [ ] En `app/modal.tsx`, un usuario con grupo ve el nombre del grupo, su `join_code` y la lista de `display_name` de todos los miembros (incluido él mismo).
-- [ ] Si dos usuarios distintos se unen al mismo grupo (uno crea, otro se une con el código), ambos ven los mismos datos de grupo y a ambos en la lista de miembros.
-- [ ] Tocar "Salir del grupo" en el modal borra la fila del usuario en `group_members`, lo redirige a `group-setup`, y el grupo sigue existiendo para los demás miembros (si los hay).
-- [ ] Tras salir de un grupo, el usuario puede crear uno nuevo o unirse a otro sin quedar bloqueado.
-- [ ] `useLocationTransmission` sigue transmitiendo correctamente a `live_locations`/`location_history` (criterios de Spec 03 intactos), ahora resolviendo `group_id` desde `GroupContext` en lugar de una llamada propia.
-- [ ] No hay errores de Supabase (RLS, RPC) al crear, unirse o salir de un grupo con un usuario autenticado válido.
+- [x] Un usuario recién registrado (sin fila en `group_members`) es redirigido a `group-setup` en lugar de `(tabs)` al iniciar sesión.
+- [x] Desde `group-setup`, crear un grupo con un nombre válido crea una fila en `groups` (con `owner_id` = usuario actual) y una fila en `group_members` para ese mismo usuario, y lo lleva automáticamente a `(tabs)`.
+- [x] Desde `group-setup`, unirse con un código válido (`join_code` existente) agrega al usuario a `group_members` de ese grupo y lo lleva automáticamente a `(tabs)`.
+- [x] Unirse con un código inválido o inexistente muestra un error estilizado Pip-Boy (no el texto crudo de Supabase) y no crea ninguna fila.
+- [x] Un usuario que ya pertenece a un grupo nunca ve la pantalla `group-setup` al reabrir la app (entra directo a `(tabs)`).
+- [x] En `app/modal.tsx`, un usuario con grupo ve el nombre del grupo, su `join_code` y la lista de `display_name` de todos los miembros (incluido él mismo).
+- [x] Si dos usuarios distintos se unen al mismo grupo (uno crea, otro se une con el código), ambos ven los mismos datos de grupo y a ambos en la lista de miembros.
+- [x] Tocar "Salir del grupo" en el modal borra la fila del usuario en `group_members`, lo redirige a `group-setup`, y el grupo sigue existiendo para los demás miembros (si los hay).
+- [x] Tras salir de un grupo, el usuario puede crear uno nuevo o unirse a otro sin quedar bloqueado.
+- [x] `useLocationTransmission` sigue transmitiendo correctamente a `live_locations`/`location_history` (criterios de Spec 03 intactos), ahora resolviendo `group_id` desde `GroupContext` en lugar de una llamada propia.
+- [x] No hay errores de Supabase (RLS, RPC) al crear, unirse o salir de un grupo con un usuario autenticado válido.
 
 ## Decisions
 

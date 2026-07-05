@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useAuth } from '@/context/AuthContext';
+import { useGroup } from '@/context/GroupContext';
 import { UseLocationState } from '@/hooks/useLocation';
-import { getCurrentUserGroupId } from '@/lib/group';
 import {
   MIN_DISTANCE_METERS,
   MIN_INTERVAL_MS,
@@ -37,28 +37,14 @@ export function useLocationTransmission(
   const { session } = useAuth();
   const userId = session?.user.id ?? null;
 
-  const [groupId, setGroupId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { groupId, loading: groupLoading } = useGroup();
+  const error = !groupLoading && !groupId ? 'SIN GRUPO ASIGNADO' : null;
+
   const [routePoints, setRoutePoints] = useState<{ lat: number; lng: number }[]>([]);
 
   const lastTransmittedRef = useRef<{ lat: number; lng: number; timestamp: number } | null>(null);
   const forceNextWriteRef = useRef(false);
   const hasActivatedRef = useRef(false);
-
-  useEffect(() => {
-    if (!userId) return;
-    let cancelled = false;
-
-    getCurrentUserGroupId(userId).then((id) => {
-      if (cancelled) return;
-      setGroupId(id);
-      setError(id ? null : 'SIN GRUPO ASIGNADO');
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [userId]);
 
   // Detecta transiciones ON/OFF del switch, desacoplado de los ticks de GPS:
   // al pasar a OFF hay que escribir sharing=false ya, sin esperar el próximo tick.
