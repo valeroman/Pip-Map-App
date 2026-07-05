@@ -8,6 +8,7 @@ import {
   MapContainer,
   Marker,
   Polyline,
+  Popup,
   TileLayer,
   useMap,
 } from "react-leaflet";
@@ -27,18 +28,34 @@ if (
   document.head.appendChild(viewportMeta);
 }
 
+interface OtherMember {
+  userId: string;
+  displayName: string;
+  lat: number;
+  lng: number;
+  routePoints: { lat: number; lng: number }[];
+}
+
 interface Props {
   lat: number;
   lng: number;
   accuracy: number | null;
   follow: boolean;
   routePoints: { lat: number; lng: number }[];
+  otherMembers: OtherMember[];
   dom: import("expo/dom").DOMProps;
 }
 
 const pipIcon = L.divIcon({
   className: "pip-marker",
   html: '<div class="pip-marker-pulse"></div><div class="pip-marker-dot"></div>',
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
+});
+
+const otherMemberIcon = L.divIcon({
+  className: "pip-marker-other",
+  html: '<div class="pip-marker-other-pulse"></div><div class="pip-marker-other-dot"></div>',
   iconSize: [16, 16],
   iconAnchor: [8, 8],
 });
@@ -92,6 +109,7 @@ export default function PipMap({
   accuracy,
   follow,
   routePoints = [],
+  otherMembers = [],
 }: Props) {
   const center = useMemo<[number, number]>(() => [lat, lng], [lat, lng]);
   const routePositions = useMemo<[number, number][]>(
@@ -142,6 +160,35 @@ export default function PipMap({
           0% { transform: scale(0.6); opacity: 0.8; }
           100% { transform: scale(2.4); opacity: 0; }
         }
+        .pip-marker-other-dot {
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #FFB642;
+          box-shadow: 0 0 6px 2px rgba(255, 182, 66, 0.9);
+        }
+        .pip-marker-other-pulse {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: rgba(255, 182, 66, 0.6);
+          animation: pip-pulse 1.4s ease-out infinite;
+        }
+        .leaflet-popup-content-wrapper {
+          background: #152218;
+          color: #21FF6C;
+          border: 1px solid #3DCC7D;
+          border-radius: 0;
+        }
+        .leaflet-popup-tip {
+          background: #152218;
+        }
       `}</style>
       <MapContainer center={center} zoom={20} zoomControl={false}>
         <TileLayer
@@ -171,6 +218,28 @@ export default function PipMap({
           />
         )}
         <Marker position={center} icon={pipIcon} />
+        {otherMembers.map((member) => (
+          <Marker
+            key={member.userId}
+            position={[member.lat, member.lng]}
+            icon={otherMemberIcon}>
+            <Popup>{member.displayName}</Popup>
+          </Marker>
+        ))}
+        {otherMembers.map(
+          (member) =>
+            member.routePoints.length > 1 && (
+              <Polyline
+                key={`route-${member.userId}`}
+                positions={member.routePoints.map((p) => [p.lat, p.lng] as [number, number])}
+                pathOptions={{
+                  color: "#FFB642",
+                  weight: 4,
+                  opacity: 0.9,
+                }}
+              />
+            ),
+        )}
         <FollowOnUpdate lat={lat} lng={lng} follow={follow} />
         <SizeToViewport />
       </MapContainer>
