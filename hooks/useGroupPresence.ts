@@ -28,6 +28,13 @@ type LiveLocationRow = {
   updated_at: string;
 };
 
+type LocationHistoryRow = {
+  user_id: string;
+  lat: number;
+  lng: number;
+  created_at: string;
+};
+
 // Estado interno por user_id: MemberPresence más el flag `sharing`, que no se
 // expone en el tipo público pero se necesita para filtrar a los inactivos.
 type PresenceEntry = MemberPresence & { sharing: boolean };
@@ -82,6 +89,43 @@ export function useGroupPresence(): { members: MemberPresence[]; count: number }
                 updatedAt: row.updated_at,
                 sharing: row.sharing,
                 routePoints: existing?.routePoints ?? [],
+              },
+            };
+          });
+        },
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'location_history',
+          filter: `group_id=eq.${groupId}`,
+        },
+        (payload: RealtimePostgresChangesPayload<LocationHistoryRow>) => {
+          const row = payload.new as LocationHistoryRow;
+          if (!row?.user_id || row.user_id === userId) return;
+
+          setPresence((prev) => {
+            const existing = prev[row.user_id];
+            const displayName =
+              existing?.displayName ??
+              groupMembersRef.current.find((member) => member.user_id === row.user_id)
+                ?.display_name ??
+              '???';
+
+            return {
+              ...prev,
+              [row.user_id]: {
+                userId: row.user_id,
+                displayName,
+                lat: existing?.lat ?? row.lat,
+                lng: existing?.lng ?? row.lng,
+                heading: existing?.heading ?? null,
+                speed: existing?.speed ?? null,
+                updatedAt: existing?.updatedAt ?? row.created_at,
+                sharing: existing?.sharing ?? true,
+                routePoints: [...(existing?.routePoints ?? []), { lat: row.lat, lng: row.lng }],
               },
             };
           });
