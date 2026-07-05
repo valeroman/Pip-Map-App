@@ -9,7 +9,7 @@ import {
 import { VT323_400Regular } from '@expo-google-fonts/vt323';
 
 import { AuthProvider, useAuth } from '@/context/AuthContext';
-import { GroupProvider } from '@/context/GroupContext';
+import { GroupProvider, useGroup } from '@/context/GroupContext';
 import { colors } from '@/theme';
 
 export {
@@ -68,23 +68,27 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { session, loading } = useAuth();
+  const { session, loading: authLoading } = useAuth();
+  const { groupId, loading: groupLoading } = useGroup();
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
-    if (loading) return;
+    if (authLoading || groupLoading) return;
 
     const inAuthGroup = segments[0] === '(auth)';
+    const inGroupSetup = segments[0] === 'group-setup';
 
     if (!session && !inAuthGroup) {
       router.replace('/(auth)/login');
-    } else if (session && inAuthGroup) {
+    } else if (session && groupId === null && !inGroupSetup) {
+      router.replace('/group-setup');
+    } else if (session && groupId !== null && (inAuthGroup || inGroupSetup)) {
       router.replace('/(tabs)');
     }
-  }, [session, loading, segments, router]);
+  }, [session, authLoading, groupId, groupLoading, segments, router]);
 
-  if (loading) {
+  if (authLoading || groupLoading) {
     return null;
   }
 
@@ -92,6 +96,7 @@ function RootLayoutNav() {
     <ThemeProvider value={pipTheme}>
       <Stack>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="group-setup" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
