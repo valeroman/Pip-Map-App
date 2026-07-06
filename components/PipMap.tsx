@@ -200,6 +200,16 @@ export default function PipMap({
     }
     return null;
   }, [followTarget, lat, lng, otherMembers]);
+
+  useEffect(() => {
+    if (
+      followTarget.type === "member" &&
+      !otherMembers.some((m) => m.userId === followTarget.userId)
+    ) {
+      setFollowTarget({ type: "self" });
+    }
+  }, [followTarget, otherMembers]);
+
   const routePositions = useMemo<[number, number][]>(
     () => routePoints.map((p) => [p.lat, p.lng]),
     [routePoints],
