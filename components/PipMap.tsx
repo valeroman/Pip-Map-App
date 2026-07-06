@@ -45,6 +45,11 @@ interface Props {
   dom: import("expo/dom").DOMProps;
 }
 
+type FollowTarget =
+  | { type: "self" }
+  | { type: "member"; userId: string }
+  | { type: "none" };
+
 const pipIcon = L.divIcon({
   className: "pip-marker",
   html: '<div class="pip-marker-pulse"></div><div class="pip-marker-dot"></div>',
@@ -60,21 +65,19 @@ const otherMemberIcon = L.divIcon({
 });
 
 function FollowOnUpdate({
-  lat,
-  lng,
-  follow,
+  targetCoords,
 }: {
-  lat: number;
-  lng: number;
-  follow: boolean;
+  targetCoords: { lat: number; lng: number } | null;
 }) {
   const map = useMap();
 
   useEffect(() => {
-    if (follow) {
-      map.setView([lat, lng], map.getZoom(), { animate: true });
+    if (targetCoords) {
+      map.setView([targetCoords.lat, targetCoords.lng], map.getZoom(), {
+        animate: true,
+      });
     }
-  }, [lat, lng, follow, map]);
+  }, [targetCoords, map]);
 
   return null;
 }
@@ -168,10 +171,28 @@ export default function PipMap({
   routePoints = [],
   otherMembers = [],
 }: Props) {
-  const [following, setFollowing] = useState(true);
-  const handleDragStart = useCallback(() => setFollowing(false), []);
-  const handleRecenter = useCallback(() => setFollowing(true), []);
+  const [followTarget, setFollowTarget] = useState<FollowTarget>({
+    type: "self",
+  });
+  const handleDragStart = useCallback(
+    () => setFollowTarget({ type: "none" }),
+    [],
+  );
+  const handleRecenter = useCallback(
+    () => setFollowTarget({ type: "self" }),
+    [],
+  );
   const center = useMemo<[number, number]>(() => [lat, lng], [lat, lng]);
+  const targetCoords = useMemo<{ lat: number; lng: number } | null>(() => {
+    if (followTarget.type === "self") return { lat, lng };
+    if (followTarget.type === "member") {
+      const member = otherMembers.find(
+        (m) => m.userId === followTarget.userId,
+      );
+      return member ? { lat: member.lat, lng: member.lng } : null;
+    }
+    return null;
+  }, [followTarget, lat, lng, otherMembers]);
   const routePositions = useMemo<[number, number][]>(
     () => routePoints.map((p) => [p.lat, p.lng]),
     [routePoints],
@@ -326,13 +347,13 @@ export default function PipMap({
               />
             ),
         )}
-        <FollowOnUpdate lat={lat} lng={lng} follow={following} />
+        <FollowOnUpdate targetCoords={targetCoords} />
         <SizeToViewport />
         <DragUnfollow onDragStart={handleDragStart} />
         <RecenterFab
           lat={lat}
           lng={lng}
-          following={following}
+          following={followTarget.type === "self"}
           onRecenter={handleRecenter}
         />
       </MapContainer>
