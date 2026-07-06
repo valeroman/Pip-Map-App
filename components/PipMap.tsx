@@ -2,7 +2,7 @@
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Circle,
   MapContainer,
@@ -115,6 +115,52 @@ function DragUnfollow({ onDragStart }: { onDragStart: () => void }) {
   return null;
 }
 
+function RecenterFab({
+  lat,
+  lng,
+  following,
+  onRecenter,
+}: {
+  lat: number;
+  lng: number;
+  following: boolean;
+  onRecenter: () => void;
+}) {
+  const map = useMap();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const el = buttonRef.current;
+    if (!el) return;
+    L.DomEvent.disableClickPropagation(el);
+    L.DomEvent.disableScrollPropagation(el);
+  }, []);
+
+  const handleClick = () => {
+    onRecenter();
+    map.setView([lat, lng], map.getZoom(), { animate: true });
+  };
+
+  return (
+    <button
+      ref={buttonRef}
+      type="button"
+      aria-label="Recentrar en mi posición"
+      aria-pressed={following}
+      className={`pip-fab ${following ? "pip-fab-active" : "pip-fab-inactive"}`}
+      onClick={handleClick}>
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="7" />
+        <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+        <line x1="12" y1="1" x2="12" y2="4" />
+        <line x1="12" y1="20" x2="12" y2="23" />
+        <line x1="1" y1="12" x2="4" y2="12" />
+        <line x1="20" y1="12" x2="23" y2="12" />
+      </svg>
+    </button>
+  );
+}
+
 export default function PipMap({
   lat,
   lng,
@@ -124,6 +170,7 @@ export default function PipMap({
 }: Props) {
   const [following, setFollowing] = useState(true);
   const handleDragStart = useCallback(() => setFollowing(false), []);
+  const handleRecenter = useCallback(() => setFollowing(true), []);
   const center = useMemo<[number, number]>(() => [lat, lng], [lat, lng]);
   const routePositions = useMemo<[number, number][]>(
     () => routePoints.map((p) => [p.lat, p.lng]),
@@ -202,6 +249,32 @@ export default function PipMap({
         .leaflet-popup-tip {
           background: #152218;
         }
+        .pip-fab {
+          position: absolute;
+          right: 16px;
+          bottom: 44px;
+          z-index: 1000;
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          cursor: pointer;
+          transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+        .pip-fab-active {
+          background: #21FF6C;
+          color: #0A0F0A;
+          border: 2px solid #21FF6C;
+          box-shadow: 0 0 10px 2px rgba(33, 255, 108, 0.6);
+        }
+        .pip-fab-inactive {
+          background: rgba(10, 15, 10, 0.75);
+          color: #21FF6C;
+          border: 2px solid #3DCC7D;
+        }
       `}</style>
       <MapContainer center={center} zoom={20} zoomControl={false}>
         <TileLayer
@@ -256,6 +329,12 @@ export default function PipMap({
         <FollowOnUpdate lat={lat} lng={lng} follow={following} />
         <SizeToViewport />
         <DragUnfollow onDragStart={handleDragStart} />
+        <RecenterFab
+          lat={lat}
+          lng={lng}
+          following={following}
+          onRecenter={handleRecenter}
+        />
       </MapContainer>
     </>
   );
