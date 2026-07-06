@@ -2,7 +2,7 @@
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Circle,
   MapContainer,
@@ -102,6 +102,19 @@ function SizeToViewport() {
   return null;
 }
 
+function DragUnfollow({ onDragStart }: { onDragStart: () => void }) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.on("dragstart", onDragStart);
+    return () => {
+      map.off("dragstart", onDragStart);
+    };
+  }, [map, onDragStart]);
+
+  return null;
+}
+
 export default function PipMap({
   lat,
   lng,
@@ -110,6 +123,7 @@ export default function PipMap({
   otherMembers = [],
 }: Props) {
   const [following, setFollowing] = useState(true);
+  const handleDragStart = useCallback(() => setFollowing(false), []);
   const center = useMemo<[number, number]>(() => [lat, lng], [lat, lng]);
   const routePositions = useMemo<[number, number][]>(
     () => routePoints.map((p) => [p.lat, p.lng]),
@@ -241,6 +255,7 @@ export default function PipMap({
         )}
         <FollowOnUpdate lat={lat} lng={lng} follow={following} />
         <SizeToViewport />
+        <DragUnfollow onDragStart={handleDragStart} />
       </MapContainer>
     </>
   );
