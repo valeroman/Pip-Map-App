@@ -45,7 +45,8 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "emulator": "emulator -avd Medium_Phone_API_36.1 -dns-server 8.8.8.8,8.8.4.4 -no-snapshot-load"
   },
   "private": true
 }
