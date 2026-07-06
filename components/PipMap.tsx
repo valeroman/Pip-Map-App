@@ -121,12 +121,12 @@ function DragUnfollow({ onDragStart }: { onDragStart: () => void }) {
 function RecenterFab({
   lat,
   lng,
-  following,
+  followTargetType,
   onRecenter,
 }: {
   lat: number;
   lng: number;
-  following: boolean;
+  followTargetType: "self" | "member" | "none";
   onRecenter: () => void;
 }) {
   const map = useMap();
@@ -144,13 +144,20 @@ function RecenterFab({
     map.setView([lat, lng], map.getZoom(), { animate: true });
   };
 
+  const fabClassName =
+    followTargetType === "self"
+      ? "pip-fab-active"
+      : followTargetType === "member"
+        ? "pip-fab-following-member"
+        : "pip-fab-inactive";
+
   return (
     <button
       ref={buttonRef}
       type="button"
       aria-label="Recentrar en mi posición"
-      aria-pressed={following}
-      className={`pip-fab ${following ? "pip-fab-active" : "pip-fab-inactive"}`}
+      aria-pressed={followTargetType === "self"}
+      className={`pip-fab ${fabClassName}`}
       onClick={handleClick}>
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2">
         <circle cx="12" cy="12" r="7" />
@@ -296,6 +303,12 @@ export default function PipMap({
           color: #21FF6C;
           border: 2px solid #3DCC7D;
         }
+        .pip-fab-following-member {
+          background: #FFB642;
+          color: #0A0F0A;
+          border: 2px solid #FFB642;
+          box-shadow: 0 0 10px 2px rgba(255, 182, 66, 0.6);
+        }
       `}</style>
       <MapContainer center={center} zoom={20} zoomControl={false}>
         <TileLayer
@@ -357,7 +370,7 @@ export default function PipMap({
         <RecenterFab
           lat={lat}
           lng={lng}
-          following={followTarget.type === "self"}
+          followTargetType={followTarget.type}
           onRecenter={handleRecenter}
         />
       </MapContainer>
