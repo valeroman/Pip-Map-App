@@ -329,7 +329,11 @@ export default function PipMap({
           <Marker
             key={member.userId}
             position={[member.lat, member.lng]}
-            icon={otherMemberIcon}>
+            icon={otherMemberIcon}
+            eventHandlers={{
+              click: () =>
+                setFollowTarget({ type: "member", userId: member.userId }),
+            }}>
             <Popup>{member.displayName}</Popup>
           </Marker>
         ))}
