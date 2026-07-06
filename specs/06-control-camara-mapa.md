@@ -1,6 +1,6 @@
 # SPEC 06 — Control de cámara: recentrar en usuario propio + FAB
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 02 (mapa Leaflet), SPEC 03 (recorrido/GPS propio), SPEC 05 (otros miembros en el mapa)
 > **Date:** 2026-07-06
 > **Objective:** Que el mapa deje de forzar el centrado en el usuario propio en cada tick de GPS, permitiendo arrastrar para inspeccionar el mapa, con un FAB que reactiva el seguimiento y recentra en la posición propia.
@@ -46,14 +46,14 @@ Sin cambios de schema en Supabase ni en `useLocation` / `useGroupPresence` / `us
 
 ## Acceptance criteria
 
-- [ ] Al abrir el mapa con posición fija, la cámara centra en la posición propia y la sigue mientras el usuario no toque el mapa (comportamiento inicial igual al actual).
-- [ ] Al arrastrar el mapa con el dedo, la cámara NO vuelve a saltar a la posición propia en el siguiente tick de GPS: queda donde el usuario la dejó.
-- [ ] Con el seguimiento apagado, el usuario puede arrastrar hasta el marcador/trayecto de otro miembro y quedarse mirándolo sin que la cámara lo arrastre de vuelta.
-- [ ] El FAB está siempre visible en la esquina inferior derecha del mapa.
-- [ ] Tocar el FAB recentra la cámara en la posición propia y reactiva el seguimiento.
-- [ ] El FAB se ve en estado activo (relleno/verde) cuando la cámara sigue la posición propia, y en estado apagado (contorno) cuando no.
-- [ ] El recentrado programático (tocar el FAB) y el zoom por FAB no cuentan como gesto de arrastre: no apagan el seguimiento por sí solos.
-- [ ] No hay errores en consola al montar el mapa, arrastrar, ni tocar el FAB.
+- [x] Al abrir el mapa con posición fija, la cámara centra en la posición propia y la sigue mientras el usuario no toque el mapa (comportamiento inicial igual al actual).
+- [x] Al arrastrar el mapa con el dedo, la cámara NO vuelve a saltar a la posición propia en el siguiente tick de GPS: queda donde el usuario la dejó.
+- [x] Con el seguimiento apagado, el usuario puede arrastrar hasta el marcador/trayecto de otro miembro y quedarse mirándolo sin que la cámara lo arrastre de vuelta.
+- [x] El FAB está siempre visible en la esquina inferior derecha del mapa.
+- [x] Tocar el FAB recentra la cámara en la posición propia y reactiva el seguimiento.
+- [x] El FAB se ve en estado activo (relleno/verde) cuando la cámara sigue la posición propia, y en estado apagado (contorno) cuando no.
+- [x] El recentrado programático (tocar el FAB) y el zoom por FAB no cuentan como gesto de arrastre: no apagan el seguimiento por sí solos.
+- [x] No hay errores en consola al montar el mapa, arrastrar, ni tocar el FAB.
 
 ## Decisions
 
