@@ -2,7 +2,7 @@
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Circle,
   MapContainer,
@@ -40,7 +40,6 @@ interface Props {
   lat: number;
   lng: number;
   accuracy: number | null;
-  follow: boolean;
   routePoints: { lat: number; lng: number }[];
   otherMembers: OtherMember[];
   dom: import("expo/dom").DOMProps;
@@ -107,10 +106,10 @@ export default function PipMap({
   lat,
   lng,
   accuracy,
-  follow,
   routePoints = [],
   otherMembers = [],
 }: Props) {
+  const [following, setFollowing] = useState(true);
   const center = useMemo<[number, number]>(() => [lat, lng], [lat, lng]);
   const routePositions = useMemo<[number, number][]>(
     () => routePoints.map((p) => [p.lat, p.lng]),
@@ -240,7 +239,7 @@ export default function PipMap({
               />
             ),
         )}
-        <FollowOnUpdate lat={lat} lng={lng} follow={follow} />
+        <FollowOnUpdate lat={lat} lng={lng} follow={following} />
         <SizeToViewport />
       </MapContainer>
     </>

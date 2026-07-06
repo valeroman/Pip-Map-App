@@ -95,7 +95,6 @@ export default function MapScreen() {
             lat={coords.lat}
             lng={coords.lng}
             accuracy={accuracy}
-            follow
             routePoints={routePoints}
             otherMembers={otherMembers}
             dom={{ scrollEnabled: false, style: styles.mapDom }}
