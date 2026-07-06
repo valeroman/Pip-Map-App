@@ -1,7 +1,7 @@
 # SPEC 07 — Seguir la trayectoria de otro miembro al tocar su ping
 
-> **Status:** Aprobado
->si **Depends on:** SPEC 02 (mapa Leaflet), SPEC 05 (otros miembros en el mapa), SPEC 06 (seguimiento de cámara + FAB)
+> **Status:** Implementado
+> **Depends on:** SPEC 02 (mapa Leaflet), SPEC 05 (otros miembros en el mapa), SPEC 06 (seguimiento de cámara + FAB)
 > **Date:** 2026-07-06
 > **Objective:** Que al tocar el marcador de un miembro del grupo la cámara pase a seguir su posición en tiempo real (con recorrido incluido), hasta que el usuario arrastre el mapa o toque el FAB para volver a seguirse a sí mismo.
 
@@ -64,14 +64,14 @@ Sin cambios de props en la interfaz `Props` de `PipMap.tsx` (`otherMembers` ya t
 
 ## Acceptance criteria
 
-- [ ] Con dos cuentas en el mismo grupo, tocar el marcador ámbar de la cuenta B en el mapa de A abre su popup con el `display_name` (comportamiento de Spec 05 intacto).
-- [ ] Al tocar el marcador de B, mientras B se mueve con `TransmitSwitch` en ON, la cámara de A recentra automáticamente en la posición de B en cada actualización, sin que A tenga que arrastrar nada.
-- [ ] El FAB se ve en ámbar mientras la cámara sigue a un miembro, verde mientras sigue la posición propia, y apagado (contorno) cuando no sigue nada.
-- [ ] Arrastrar el mapa mientras se sigue a un miembro apaga el seguimiento: la cámara no vuelve a saltar a la posición de ese miembro en la siguiente actualización, y el FAB pasa a apagado.
-- [ ] Tocar el FAB mientras se sigue a un miembro recentra la cámara en la posición propia, pone el FAB en verde, y los siguientes movimientos de ese miembro ya no mueven la cámara.
-- [ ] Si B deja de compartir (apaga el switch o cierra la app a la fuerza) mientras A lo está siguiendo, pasada la ventana de staleness (~120s) la cámara de A vuelve sola a la posición propia y el FAB pasa a verde, sin que A toque nada.
-- [ ] Tocar el marcador propio (verde) no tiene ningún efecto nuevo (sigue sin `Popup` ni acción, comportamiento actual).
-- [ ] No hay errores en consola al tocar el marcador de un miembro, arrastrar, tocar el FAB, ni cuando un miembro seguido desaparece del grupo.
+- [x] Con dos cuentas en el mismo grupo, tocar el marcador ámbar de la cuenta B en el mapa de A abre su popup con el `display_name` (comportamiento de Spec 05 intacto).
+- [x] Al tocar el marcador de B, mientras B se mueve con `TransmitSwitch` en ON, la cámara de A recentra automáticamente en la posición de B en cada actualización, sin que A tenga que arrastrar nada.
+- [x] El FAB se ve en ámbar mientras la cámara sigue a un miembro, verde mientras sigue la posición propia, y apagado (contorno) cuando no sigue nada.
+- [x] Arrastrar el mapa mientras se sigue a un miembro apaga el seguimiento: la cámara no vuelve a saltar a la posición de ese miembro en la siguiente actualización, y el FAB pasa a apagado.
+- [x] Tocar el FAB mientras se sigue a un miembro recentra la cámara en la posición propia, pone el FAB en verde, y los siguientes movimientos de ese miembro ya no mueven la cámara.
+- [x] Si B deja de compartir (apaga el switch o cierra la app a la fuerza) mientras A lo está siguiendo, pasada la ventana de staleness (~120s) la cámara de A vuelve sola a la posición propia y el FAB pasa a verde, sin que A toque nada.
+- [x] Tocar el marcador propio (verde) no tiene ningún efecto nuevo (sigue sin `Popup` ni acción, comportamiento actual).
+- [x] No hay errores en consola al tocar el marcador de un miembro, arrastrar, tocar el FAB, ni cuando un miembro seguido desaparece del grupo.
 
 ## Decisions
 
