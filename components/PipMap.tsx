@@ -192,6 +192,32 @@ function RecenterFab({
   );
 }
 
+function LayerFab({ onCycle }: { onCycle: () => void }) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const el = buttonRef.current;
+    if (!el) return;
+    L.DomEvent.disableClickPropagation(el);
+    L.DomEvent.disableScrollPropagation(el);
+  }, []);
+
+  return (
+    <button
+      ref={buttonRef}
+      type="button"
+      aria-label="Cambiar vista del mapa"
+      className="pip-fab pip-fab-layers"
+      onClick={onCycle}>
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2">
+        <polygon points="12 2 2 7 12 12 22 7 12 2" />
+        <polyline points="2 17 12 22 22 17" />
+        <polyline points="2 12 12 17 22 12" />
+      </svg>
+    </button>
+  );
+}
+
 export default function PipMap({
   lat,
   lng,
@@ -209,6 +235,13 @@ export default function PipMap({
   );
   const handleRecenter = useCallback(
     () => setFollowTarget({ type: "self" }),
+    [],
+  );
+  const handleCycleLayer = useCallback(
+    () =>
+      setMapLayer(
+        (l) => LAYER_CYCLE[(LAYER_CYCLE.indexOf(l) + 1) % LAYER_CYCLE.length],
+      ),
     [],
   );
   const center = useMemo<[number, number]>(() => [lat, lng], [lat, lng]);
@@ -341,6 +374,16 @@ export default function PipMap({
           border: 2px solid #FFB642;
           box-shadow: 0 0 10px 2px rgba(255, 182, 66, 0.6);
         }
+        .pip-fab-layers {
+          bottom: 104px;
+          background: rgba(10, 15, 10, 0.75);
+          color: #21FF6C;
+          border: 2px solid #3DCC7D;
+        }
+        .pip-fab-layers:active {
+          background: #152218;
+          border-color: #21FF6C;
+        }
       `}</style>
       <MapContainer center={center} zoom={20} zoomControl={false}>
         <TileLayer
@@ -406,6 +449,7 @@ export default function PipMap({
           followTargetType={followTarget.type}
           onRecenter={handleRecenter}
         />
+        <LayerFab onCycle={handleCycleLayer} />
       </MapContainer>
     </>
   );
