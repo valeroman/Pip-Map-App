@@ -50,6 +50,27 @@ type FollowTarget =
   | { type: "member"; userId: string }
   | { type: "none" };
 
+type MapLayer = "standard" | "satellite" | "terrain";
+
+const LAYER_CYCLE: MapLayer[] = ["standard", "satellite", "terrain"];
+
+const TILE_LAYERS: Record<MapLayer, { url: string; attribution: string }> = {
+  standard: {
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  },
+  satellite: {
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attribution:
+      "Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+  },
+  terrain: {
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Tiles &copy; Esri — Source: Esri, USGS, NOAA",
+  },
+};
+
 const pipIcon = L.divIcon({
   className: "pip-marker",
   html: '<div class="pip-marker-pulse"></div><div class="pip-marker-dot"></div>',
@@ -181,6 +202,7 @@ export default function PipMap({
   const [followTarget, setFollowTarget] = useState<FollowTarget>({
     type: "self",
   });
+  const [mapLayer, setMapLayer] = useState<MapLayer>("standard");
   const handleDragStart = useCallback(
     () => setFollowTarget({ type: "none" }),
     [],
@@ -322,8 +344,9 @@ export default function PipMap({
       `}</style>
       <MapContainer center={center} zoom={20} zoomControl={false}>
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url={TILE_LAYERS[mapLayer].url}
+          attribution={TILE_LAYERS[mapLayer].attribution}
+          key={mapLayer}
         />
         {accuracy != null && (
           <Circle
