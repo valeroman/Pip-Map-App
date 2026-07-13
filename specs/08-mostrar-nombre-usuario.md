@@ -1,6 +1,6 @@
 # SPEC 08 — Mostrar el nombre del propio usuario en el header
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 01 (login/registro Supabase: `display_name` en `user_metadata`), SPEC 05/06 (`StatusBarHeader` ya presente en la pantalla del mapa)
 > **Date:** 2026-07-13
 > **Objective:** Mostrar el `display_name` del usuario autenticado en el header (`StatusBarHeader`) de la pantalla del mapa, en modo solo lectura, para que sepa con qué identidad está logueado.
@@ -44,13 +44,13 @@ El valor se lee de la sesión ya cargada (`useAuth()`), sin query adicional a Su
 
 ## Acceptance criteria
 
-- [ ] El header de la pantalla del mapa muestra el `display_name` del usuario logueado, debajo del título `'Vault-Tec Pip-Map'`.
-- [ ] Si el usuario no tiene `display_name` en `user_metadata`, se muestra el prefijo del email; si tampoco hay email, `'Usuario'`.
-- [ ] Al cerrar sesión e ingresar con otra cuenta, el nombre mostrado cambia al de la nueva cuenta.
-- [ ] El título `'Vault-Tec Pip-Map'` sigue visible (no se reemplaza por el nombre).
-- [ ] No se dispara ninguna query extra a Supabase para obtener el nombre (se lee de la sesión ya cargada).
-- [ ] No existe forma de editar el nombre desde esta pantalla (solo lectura).
-- [ ] No hay errores en consola al montar la pantalla ni al cambiar de cuenta.
+- [x] El header de la pantalla del mapa muestra el `display_name` del usuario logueado, debajo del título `'Vault-Tec Pip-Map'`.
+- [x] Si el usuario no tiene `display_name` en `user_metadata`, se muestra el prefijo del email; si tampoco hay email, `'Usuario'`. (verificado por código: el registro exige `display_name`, no es alcanzable en runtime desde la app)
+- [x] Al cerrar sesión e ingresar con otra cuenta, el nombre mostrado cambia al de la nueva cuenta.
+- [x] El título `'Vault-Tec Pip-Map'` sigue visible (no se reemplaza por el nombre).
+- [x] No se dispara ninguna query extra a Supabase para obtener el nombre (se lee de la sesión ya cargada).
+- [x] No existe forma de editar el nombre desde esta pantalla (solo lectura).
+- [x] No hay errores en consola al montar la pantalla ni al cambiar de cuenta.
 
 ## Decisions
 
