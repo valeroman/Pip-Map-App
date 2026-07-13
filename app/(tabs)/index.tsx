@@ -7,6 +7,7 @@ import { PipScreen } from '@/components/PipScreen';
 import { PipText } from '@/components/PipText';
 import { StatusBarHeader } from '@/components/StatusBarHeader';
 import { TransmitSwitch } from '@/components/TransmitSwitch';
+import { useAuth } from '@/context/AuthContext';
 import { useGroupPresence } from '@/hooks/useGroupPresence';
 import { useLocation } from '@/hooks/useLocation';
 import { useLocationTransmission } from '@/hooks/useLocationTransmission';
@@ -32,6 +33,7 @@ function statusMessage(status: ReturnType<typeof useLocation>['status']) {
 export default function MapScreen() {
   const [transmitting, setTransmitting] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const { session } = useAuth();
   const location = useLocation();
   const { coords, accuracy, status } = location;
   const { routePoints, error: transmissionError } = useLocationTransmission(
@@ -63,6 +65,14 @@ export default function MapScreen() {
     setLoggingOut(false);
   };
 
+  const userName = useMemo(
+    () =>
+      session
+        ? session.user.user_metadata?.display_name ?? session.user.email?.split('@')[0] ?? 'Usuario'
+        : undefined,
+    [session]
+  );
+
   const hasFix = status === 'granted' && coords != null;
 
   const signal = useMemo(() => {
@@ -76,7 +86,7 @@ export default function MapScreen() {
 
   return (
     <PipScreen style={styles.screen}>
-      <StatusBarHeader onLogout={handleLogout} loggingOut={loggingOut} />
+      <StatusBarHeader userName={userName} onLogout={handleLogout} loggingOut={loggingOut} />
 
       <View style={styles.mapPlaceholder}>
         <View style={[styles.pill, styles.pillTopLeft, { borderColor: signal.color }]}>
