@@ -10,11 +10,17 @@ const SIGNAL_BAR_COUNT = 4;
 
 type Props = {
   title?: string;
+  userName?: string;
   onLogout?: () => void;
   loggingOut?: boolean;
 };
 
-export function StatusBarHeader({ title = 'Vault-Tec Pip-Map', onLogout, loggingOut }: Props) {
+export function StatusBarHeader({
+  title = 'Vault-Tec Pip-Map',
+  userName,
+  onLogout,
+  loggingOut,
+}: Props) {
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -33,9 +39,16 @@ export function StatusBarHeader({ title = 'Vault-Tec Pip-Map', onLogout, logging
       <PipText variant="small" color={colors.primary}>
         {hhmm}
       </PipText>
-      <PipText variant="label" color={colors.accent} glow>
-        {title}
-      </PipText>
+      <View style={styles.center}>
+        <PipText variant="label" color={colors.accent} glow>
+          {title}
+        </PipText>
+        {userName ? (
+          <PipText variant="small" color={colors.textDim} numberOfLines={1}>
+            {userName}
+          </PipText>
+        ) : null}
+      </View>
       <View style={styles.right}>
         <View style={styles.signalBars}>
           {Array.from({ length: SIGNAL_BAR_COUNT }, (_, i) => (
@@ -80,6 +93,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 14,
+  },
+  center: {
+    alignItems: 'center',
   },
   right: {
     flexDirection: 'row',
