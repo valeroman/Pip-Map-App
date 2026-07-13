@@ -1,6 +1,6 @@
 # SPEC 09 — Vistas de mapa (estándar / satelital / terreno)
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 02 (mapa Leaflet), SPEC 06 (FAB de recentrado en `components/PipMap.tsx`)
 > **Date:** 2026-07-13
 > **Objective:** Agregar un FAB que cicle entre tres vistas del mapa — estándar (OpenStreetMap, la actual), satelital (Esri World Imagery) y terreno/topográfico (Esri World Topo Map) — arrancando siempre en estándar.
@@ -68,14 +68,14 @@ No hay cambios en `Props`, ni en `useLocation` / `useGroupPresence` / `useLocati
 
 ## Acceptance criteria
 
-- [ ] Al abrir el mapa, se ve la vista estándar (OpenStreetMap) tal como hoy.
-- [ ] Existe un FAB de capas en la esquina inferior derecha, arriba del FAB de recentrado, sin superponerse visualmente con él.
-- [ ] Tocar el FAB de capas cicla las vistas en el orden estándar → satelital → terreno → estándar → ...
-- [ ] El cambio de capa es inmediato y no reinicia el `center`/zoom actual del mapa.
-- [ ] El cambio de capa no afecta el estado de seguimiento de cámara (`following`/`followTarget`) ni el comportamiento del FAB de recentrado.
-- [ ] Al recargar la pantalla del mapa (remontar `PipMap`), la vista vuelve a arrancar en estándar (no se persiste la elección).
-- [ ] Los marcadores propios, de otros miembros y las trayectorias (`Polyline`) siguen visibles y correctos sobre las tres capas.
-- [ ] No hay errores en consola al montar el mapa, ciclar capas repetidamente, ni al arrastrar/zoom con cualquiera de las tres capas activas.
+- [x] Al abrir el mapa, se ve la vista estándar (OpenStreetMap) tal como hoy.
+- [x] Existe un FAB de capas en la esquina inferior derecha, arriba del FAB de recentrado, sin superponerse visualmente con él.
+- [x] Tocar el FAB de capas cicla las vistas en el orden estándar → satelital → terreno → estándar → ...
+- [x] El cambio de capa es inmediato y no reinicia el `center`/zoom actual del mapa.
+- [x] El cambio de capa no afecta el estado de seguimiento de cámara (`following`/`followTarget`) ni el comportamiento del FAB de recentrado.
+- [x] Al recargar la pantalla del mapa (remontar `PipMap`), la vista vuelve a arrancar en estándar (no se persiste la elección).
+- [x] Los marcadores propios, de otros miembros y las trayectorias (`Polyline`) siguen visibles y correctos sobre las tres capas.
+- [x] No hay errores en consola al montar el mapa, ciclar capas repetidamente, ni al arrastrar/zoom con cualquiera de las tres capas activas.
 
 ## Decisions
 
